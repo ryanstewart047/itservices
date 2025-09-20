@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Link of CSS files -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/flaticon.css">
+    <link rel="stylesheet" href="assets/css/remixicon.css">
+    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="assets/css/owl-theme-default-min.css">
+    <link rel="stylesheet" href="assets/css/odometer.min.css">
+    <link rel="stylesheet" href="assets/css/fancybox.css">
+    <link rel="stylesheet" href="assets/css/aos.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/dark-theme.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <title>Project details</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    
+    
+    <style>
+        
+      
+.row {
+    display: flex;
+    flex-wrap: wrap;
+  
+}
+
+.col-xl-8 {
+    flex: 1;
+    padding-right: 20px; 
+}
+
+.col-xl-4 {
+    flex: 0 0 auto;
+}
+
+.image-sidebar {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.image-sidebar img {
+    margin-bottom: 10px;
+    width: 410px;
+    height: 349px;
+}
+
+
+/* Default styles for larger screens (col-xl-4) */
+.col-xl-4 {
+    flex: 0 0 auto;
+}
+
+.image-sidebar img {
+    width: 100%; 
+    height: auto;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 767px) {
+    .col-xl-4 {
+        width: 100%; 
+        max-width: none;
+    }
+    
+    .image-sidebar img {
+        margin-bottom: 10px;
+    }
+    
+
+    .video-sidebar iframe {
+    margin-bottom: 10px;
+    width: 410px;
+    height: 349px;
+    }
+}
+
+.image-caption {
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+}
+
+          
+        
+    </style>
+</head>
+
+<body>
+
+    <!--Preloader starts-->
+    <div class="loader js-preloader">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <!--Preloader ends-->
+
+    <!-- Theme Switcher Start -->
+    <div class="switch-theme-mode">
+        <label id="switch" class="switch">
+                <input type="checkbox" onchange="toggleTheme()" id="slider">
+                <span class="slider round"></span>
+        </label>
+    </div>
+    <!-- Theme Switcher End -->
+
+    <!-- Page Wrapper End -->
+    <div class="page-wrapper">
+
+        <!-- Header Section Start -->
+    <header class="header-wrap">
+                <div class="header-top">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8 col-md-8">
+                                <div class="header-top-left">
+                                    <ul class="contact-info list-style">
+                                        <marquee bgcolor="#338F7A" font style="bold" scrolldelay="100"><font size="3" face="Verdana"><font color="#D8BFD8">USA Non-profit Corporation Registration MA 001751059; EIN: 99-0979318</marquee>
+                                        <li>
+                                            <i class="flaticon-phone-call"></i>
+                                            <a href="tel:+12024386441">+1 (202) 438-6441</a>                                        
+                                        </li>
+                                       
+                                        <li>
+                                            <i class="flaticon-email-2"></i>
+                                           <a href="mailto:earthregenerativeprojectsl@gmail.com"><span class="__cf_email__" data-cfemail="d2bbbcb4bd92b1bebbbffcb1bdbf">earthregenerativeprojectsl@gmail.com</span></a>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-pin"></i>
+                                            <p>32 Wallace Johnson St Freetown SL</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4">
+                                <div class="header-top-right">
+                                    <div class="select-lang">
+                                        <i class="ri-earth-fill"></i>
+                                        <div class="navbar-option-item navbar-language dropdown language-option">
+                                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
+                                                <span class="lang-name"></span>
+                                            </button>
+                                            <div class="dropdown-menu language-dropdown-menu">
+                                                <a class="dropdown-item" href="https://www-earpi-org.translate.goog/?_x_tr_sl=zh-CN&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp">
+                                                    <img src="assets/img/uk.png" alt="flag">
+                                                    Eng
+                                                </a>
+                                                <a class="dropdown-item" href="https://www-earpi-org.translate.goog/?_x_tr_sl=auto&_x_tr_tl=zh-CN&_x_tr_hl=en&_x_tr_pto=wapp">
+                                                    <img src="assets/img/china.png" alt="flag">
+                                                    简体中文
+                                                </a>
+                                                <a class="dropdown-item" href="https://www-earpi-org.translate.goog/?_x_tr_sl=auto&_x_tr_tl=fr&_x_tr_hl=en&_x_tr_pto=wapp">
+                                                    <img src="assets/img/france.png" alt="flag">
+                                                        French
+                                                </a>
+                                                <a class="dropdown-item" href="https://www-earpi-org.translate.goog/?_x_tr_sl=auto&_x_tr_tl=ar&_x_tr_hl=en&_x_tr_pto=wapp">
+                                                    <img src="assets/img/uae.png" alt="flag">
+                                                    العربيّة
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="social-profile list-style style1">
+                                        <li>
+                                            <a href="https://facebook.com/" target="_blank">
+                                                <i class="ri-facebook-fill"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                           <a href="https://twitter.com/earpsierraleone" target="_blank">
+                                                <i class="ri-twitter-fill"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                           <a href="https://www.instagram.com/earpisierraleone" target="_blank">
+                                                <i class="ri-instagram-fill"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.tiktok.com/" target="_blank">
+                                                <i class="fab fa-tiktok"></i>
+                                             </a>
+                                         </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-bottom">
+                    <div class="container">
+                        <nav class="navbar navbar-expand-md navbar-light">
+                           <a class="navbar-brand" href="index.html">
+                                <img class="logo-light" src="assets/img/logo.png" alt="logo">
+                                <img class="logo-dark" src="assets/img/logo-white.png" alt="logo">
+                            </a>
+                            <div class="collapse navbar-collapse main-menu-wrap" id="navbarSupportedContent">
+                                <div class="menu-close d-lg-none">
+                                    <a href="javascript:void(0)"> <i class="ri-close-line"></i></a>
+                                </div>
+                                <ul class="navbar-nav ms-auto">
+                                    <li class="nav-item">
+                                        <a href="index.html" class="nav-link">
+                                            Home
+                                            <!-- <i class="ri-add-line"></i> -->
+                                        </a>
+                                        <!-- <ul class="dropdown-menu">
+                                            <li class="nav-item">
+                                                <a href="index.html" class="nav-link active">Home One</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="index-2.html" class="nav-link">Home Two</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="index-3.html" class="nav-link">Home Three</a>
+                                            </li>
+                                        </ul> -->
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="about.html" class="nav-link">
+                                            About Us
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="project-one.html" class="nav-link">
+                                            Projects
+                                          <!-- <i class="ri-add-line"></i>-->
+                                        </a>
+                                      <!--  <ul class="dropdown-menu">
+                                            <li class="nav-item">
+                                                <a href="project-one.html" class="nav-link">Project One</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="project-two.html" class="nav-link">Project Two</a>
+                                            </li>
+                                             <li class="nav-item">
+                                                <a href="project-details.html" class="nav-link">Single Project</a>
+                                            </li>
+                                        </ul>-->
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            Pages
+                                            <i class="ri-add-line"></i>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li class="nav-item">
+                                                <a href="event.html" class="nav-link">
+                                                    Events
+                                                    <!--<i class="ri-add-line"></i>-->
+                                                </a>
+                                            <!--   <ul class="dropdown-menu">
+                                                    <li class="nav-item">
+                                                        <a href="event.html" class="nav-link">Events</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="event-details.html" class="nav-link">Special Events</a>
+                                                    </li>
+                                                </ul>-->
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="team.html" class="nav-link">
+                                                    Our Team
+                                                    <!--<i class="ri-add-line"></i>-->
+                                                </a>
+                                              <!--  <ul class="dropdown-menu">
+                                                    <li class="nav-item">
+                                                        <a href="team.html" class="nav-link">Our Volunteer</a>
+                                                    </li>
+                                                   <li class="nav-item">
+                                                        <a href="team-details.html" class="nav-link">Volunteer Profile</a>
+                                                    </li>
+                                                </ul>-->
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="donation.html" class="nav-link">Make Donation</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="faq.html" class="nav-link">FAQ</a>
+                                            </li>
+                                            <!--<li class="nav-item">
+                                                <a href="#" class="nav-link">
+                                                    User Pages
+                                                    <i class="ri-add-line"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li class="nav-item">
+                                                        <a href="login.html" class="nav-link">Login</a>
+                                                    </li>
+                                                     <li class="nav-item">
+                                                        <a href="register.html" class="nav-link">Register</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="recover-password.html" class="nav-link">Recover Password</a>
+                                                    </li>
+                                                </ul>
+                                            </li>-->
+                                            <li class="nav-item">
+                                                <a href="terms-of-service.html" class="nav-link">Terms of Service</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="privacy-policy.html" class="nav-link">Privacy Policy</a>
+                                            </li>
+                                           <!-- <li class="nav-item">
+                                                 <a href="error-404.html" class="nav-link">404 Error Page</a>
+                                            </li>-->
+                                        </ul>
+                                    </li>
+                                    <!--   <li class="nav-item">
+                                        <a href="blog-right-sidebar.html" class="nav-link">
+                                            Blog
+                                          <i class="ri-add-line"></i> 
+                                        </a>
+                                         <ul class="dropdown-menu">
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link">
+                                                    Blog Layout
+                                                    <i class="ri-add-line"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li class="nav-item">
+                                                        <a href="blog-no-sidebar.html" class="nav-link">Blog Grid</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="blog-left-sidebar.html" class="nav-link">Blog Left Sidebar</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="blog-right-sidebar.html" class="nav-link">Blog Right Sidebar</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link">
+                                                    Single Blog
+                                                    <i class="ri-add-line"></i>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li class="nav-item">
+                                                        <a href="blog-details-no-sidebar.html" class="nav-link">Blog Details No Sidebar</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="blog-details-left-sidebar.html" class="nav-link">Blog Details Left Sidebar</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a href="blog-details-right-sidebar.html" class="nav-link">Blog Details Right Sidebar</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul> 
+                                    </li> -->
+                                    <li class="nav-item">
+                                        <a href="contact.html" class="nav-link">Contact Us</a>
+                                    </li>
+                                    <li class="nav-item d-lg-none">
+                                        <a href="donation.html" class="nav-link btn style1">Donate Now</a>
+                                    </li>
+                                </ul>
+                                <div class="other-options md-none">
+                                    <div class="option-item">
+                                        <button class="searchbtn d-xl-none"><i class="ri-search-line"></i></button>
+                                        <div class="searchbox lg-none">
+                                            <input type="search" placeholder="Search...">
+                                            <button><i class="flaticon-search-1"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="option-item">
+                                        <a href="donation.html" class="btn style1">Donate Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                        <div class="search-area">
+                            <input type="search" placeholder="Search Here..">
+                            <button type="submit"><i class="ri-search-line"></i></button>
+                        </div>
+                        <div class="mobile-bar-wrap">
+                            <button class="searchbtn d-lg-none"><i class="ri-search-line"></i></button>
+                            <div class="mobile-menu d-lg-none">
+                                <a href="javascript:void(0)"><i class="ri-menu-line"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>      
+            <!-- Header Section End -->
+
+            <!-- Content Wrapper Start -->
+            <div class="content-wrapper">
+
+                <!-- Breadcrumb Start -->
+                <div class="breadcrumb-wrap bg-f br-1">
+                    <div class="container">
+                        <div class="breadcrumb-title">
+                            <h2>Climate and Environmental Education Literacy Campaign</h2>
+                            <ul class="breadcrumb-menu list-style">
+                                <li><a href="index.html">Home </a></li>
+                                <li><a href="priority-two.html">Projects</a></li>
+                                <li>Save the trees</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Breadcrumb End -->
+
+                <!-- Project Details Section Start -->
+                <section class="project-details-wrap ptb-100">
+                    <div class="container">
+                        <div class="row gx-5">
+                            <div class="col-xl-8">
+                                <div class="project-desc">
+                                    <a class="single-project-img mt-0" data-fancybox="gallery" href="assets/img/project/single-pro-2.jpg">
+                                        <img src="assets/img/project/women-empoerment.jpg" alt="Image">
+                                    </a>
+                                    <h1>The Climate and Environmental Education Literacy Campaign</h1>
+                                    <div class="progressbar-wrap ">
+                                        <div class="progress-bar" data-percentage="0%">
+                                            <h4 class="progress-title-holder">
+                                                <span class="progress-number-wrapper">
+                                                    <span class="progress-number-mark">
+                                                        <span class="percent"></span>
+                                                    </span>
+                                                </span>
+                                            </h4>
+                                            <div class="progress-content-outter">
+                                                <div class="progress-content">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="fund-collection list-style">
+                                        <li class="fund-raised">
+                                            <span>$0</span> Raised Of $0
+                                        </li>
+                                    </ul>
+                                    <p>The Climate and Environmental Education Literacy Campaign is a comprehensive initiative of
+                                        Earth Regenerative Project Sierra Leone aimed at promoting awareness, education, and action
+                                        on climate change and environmental issues. With the growing urgency to address the
+                                        challenges posed by climate change, this campaign seeks to empower individuals, communities,
+                                        and institutions with the knowledge and tools needed to make informed decisions and take
+                                        meaningful steps towards sustainability.</p>
+                                    <p>The campaign emphasizes the importance of climate and environmental literacy. It recognizes
+                                        that understanding the science behind climate change, as well as the interconnectedness of
+                                        various environmental systems, is fundamental to fostering environmental stewardship and
+                                        driving positive change. By promoting literacy, the campaign seeks to bridge the gap between
+                                        scientific research and public understanding, ensuring that accurate information reaches a
+                                        wider audience.</p>
+                                    <blockquote class="wp-block-quote">
+                                        <p>Climate change is a global challenge that demands urgent action. Mitigating greenhouse gases is not a choice; it's our responsibility to protect the planet for future generations." </p>
+                                    </blockquote>
+                                    <p>The campaign employs a multi-faceted approach to achieve its objectives. It involves
+                                        educational initiatives in schools, colleges, and universities, integrating climate and
+                                        environmental topics into curricula and promoting interdisciplinary learning. EaRP-SL NGO
+                                        utilizes digital platforms and media channels to disseminate information, raise awareness, and
+                                        engage with diverse audiences, including the general public, policymakers, and businesses.</p>
+                                        
+                                    <p>The campaign encourages partnerships and collaboration between different stakeholders. It
+                                        brings together scientists, educators, community leaders, NGOs, and government agencies to
+                                        share knowledge, best practices, and resources. By fostering collaboration, the campaign aims
+                                        to create a collective and coordinated effort to address climate change and environmental
+                                        challenges effectively.</p>
+                                    <p>The Climate and Environmental Education Literacy Campaign also emphasizes the need for
+                                        action. Earth Regenerative Project Sierra Leone (EaRP-SL) NGO empowers individuals and
+                                        communities to make sustainable choices in their daily lives, such as reducing energy
+                                        consumption, adopting renewable energy sources, practicing waste reduction and recycling,
+                                        and supporting local and sustainable businesses. Moreover, it encourages advocacy and
+                                        engagement in policy-making processes to drive systemic change and promote environmentally
+                                        friendly practices at a larger scale.</p>
+                                    <p>Earth Regenerative Project Sierra Leone (EaRP-SL) NGO Climate and Environmental Education
+                                        Literacy Campaign is a vital initiative that seeks to promote knowledge, awareness, and action
+                                        on climate change and environmental issues. By fostering literacy, collaboration, and individual
+                                        responsibility, the campaign aims to inspire a collective effort towards a sustainable future.</p>
+                                    <div class="row">
+                                        <div class="section-title style1 text-center mb-40">
+                                            <span>Related Topics<img src="assets/img/section-shape.png" alt="Image"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a class="single-project-img" data-fancybox="gallery" href="assets/img/project/project-1.jpg">
+                                                <img src="assets/img/project/project-1.jpg" alt="Image">
+                                            </a>
+                                        </div>                                        
+                                        <div class="col-md-6">
+                                            <a class="single-project-img" data-fancybox="gallery" href="assets/img/project/project-2.jpg">
+                                                <img src="assets/img/project/plant-trees.jpg" alt="Image">
+                                            </a>
+                                        </div>
+                                    </div>                            
+                                    
+                                    <strong style="text-align: center; font-size: 20px; font-weight: bold; color: black;">Stop Cutting Down Trees</strong>
+                                    <p>Cutting down trees has significant climate effects that can contribute to climate change. Here are some of the main ways in which tree removal impacts the climate:</p>
+                                    <ol>
+                                        <li><strong> Reduced Carbon Sequestration:</strong> Trees act as carbon sinks, meaning they absorb carbon dioxide (CO2) from the atmosphere during photosynthesis and store it as carbon in their trunks, branches, and roots. When trees are cut down, the stored carbon is released back into the atmosphere as CO2, increasing the concentration of greenhouse gases. This process contributes to the greenhouse effect and leads to global warming.</li>
+                                        <li><strong> Increased Greenhouse Gas Emissions:</strong> The process of cutting down trees often involves burning or decomposition of the felled trees. This releases additional CO2 and other greenhouse gases like methane (CH4) into the atmosphere. In some cases, trees are cut down for land conversion, such as agriculture or urban development, leading to further emissions as the land is disturbed and transformed.</li>
+                                        <li><strong>Loss of Biodiversity and Ecosystems:</strong> Trees and forests support a diverse range of plant and animal species. Clearing forests disrupts ecosystems, leading to the loss of habitat for various wildlife, and can push some species towards extinction. The loss of biodiversity can have cascading effects on the environment and ecosystem services, potentially impacting climate regulation.</li>
+                                        <li><strong>Altered Local Climate:</strong> Trees play a role in regulating local climates through a process known as evapotranspiration. They release water vapor through their leaves, which cools the surrounding air and forms clouds. When trees are removed, the cooling effect is reduced, leading to altered microclimates, potentially contributing to local temperature increases and changes in precipitation patterns.</li>
+                                    
+                                            
+                                        <li> <strong> Deforestation and Land Use Change:</strong> Large-scale deforestation for agricultural expansion or other purposes can lead to significant changes in land use. When natural forest cover is replaced by agriculture or urban areas, it can lead to altered land surface properties, such as reduced evapotranspiration and increased surface albedo (reflectivity), which can further influence local and regional climate patterns.</li>
+
+                                        <li><strong> Feedback Loops:</strong> Deforestation and forest degradation can disrupt complex feedback loops that regulate the climate. For instance, the Amazon rainforest plays a crucial role in the water cycle, and its destruction could potentially lead to reduced rainfall in the region and beyond, impacting climate on a broader scale.</li>
+                                    </ol>
+                                    <p>To mitigate the climate effects of cutting down trees, it's essential to focus on sustainable forestry practices, afforestation (planting new trees), and reforestation efforts to maintain and restore forest cover. Forest conservation and management are critical components of global climate change mitigation strategies.</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-4">
+                                <div class="sidebar">
+                                    <div class="sidebar-widget">
+                                        <h4>Project Brief</h4>
+                                        <div class="project-info-item-wrap">
+                                            <div class="project-info-item">
+                                                <h6>Categroy:</h6>
+                                               <span>Climate Change Awarness</span>
+                                            </div>
+                                            <div class="project-info-item">
+                                                <h6>Date:</h6>
+                                               <span>28 Jul, 2022</span>
+                                            </div>
+                                            <div class="project-info-item">
+                                                <h6>Entrance:</h6>
+                                               <span>Unlimited</span>
+                                            </div>
+                                            <div class="project-info-item">
+                                                <h6>Type:</h6>
+                                               <span>Open</span>
+                                            </div>
+                                            <div class="project-info-item">
+                                                <h6>Share:</h6>
+                                                <ul class="social-profile list-style style2">
+                                                    <li>
+                                                        <a href="https://facebook.com/">
+                                                            <i class="ri-facebook-fill"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://twitter.com/">
+                                                            <i class="ri-twitter-fill"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://linkedin.com/">
+                                                            <i class="ri-linkedin-fill"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="https://pinterest.com/">
+                                                            <i class="ri-pinterest-line"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="sidebar-widget">
+                                        <h4>Give Us A Message</h4>    
+                                        <form action="#" class="register-widget">
+                                            <div class="form-group">
+                                                <input type="text" placeholder="Name*">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="email" placeholder="Email*">
+                                            </div>
+                                            <div class="form-group">
+                                                <textarea name="msg" id="msg" cols="30" rows="10" placeholder="Your Message"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn style1 w-100 d-block">Send Message</button>
+                                        </form>
+                                    </div>
+                                <div class="sidebar">
+                                <!-- Image Sidebar Widget -->
+                                <div class="sidebar-widget">
+                                    <div class="image-sidebar">
+                                       <img src="assets/img/project/agri-2.jpg" alt="Image 1" >
+                                        <img src="assets/img/project/agri-3.jpg" alt="Image 2" >
+                                    </div>
+                                </div>
+                                
+                                <!-- Video Sidebar Widget -->
+                                <div class="sidebar-widget">
+                                    <div class="video-sidebar">
+                                        <iframe width="410" height="349" src="https://www.youtube.com/embed/TlPY4e1njAE" frameborder="0" allowfullscreen></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Project Details Section End -->
+
+            </div>
+            <!-- Content wrapper end -->
+
+            <!-- Footer Section Start -->
+                 <footer class="footer-wrap">
+                <div class="footer-top">
+                    <img src="assets/img/footer-shape-1.png" alt="Image" class="footer-shape-one moveHorizontal">
+                    <img src="assets/img/sun-2.png" alt="Image" class="footer-shape-two rotate">
+                    <img src="assets/img/bird.png" alt="Image" class="footer-shape-three flyLeft">
+                    <div class="container">
+                        <div class="row pt-100 pb-75">
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 pe-xl-5">
+                                <div class="footer-widget">
+                                    <a href="index.html" class="footer-logo">
+                                        <img src="assets/img/logo-white.png" alt="Image">
+                                    </a>
+                                    <p class="comp-desc">
+                                        Subscribe the get the latest news letter of happining around the world related to climate change and our environment.
+                                    </p>
+                                    <div class="newsletter-form">
+                                        <input type="email" placeholder="Email Address">
+                                        <button type="button">Subscribe Now</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 ps-xl-5 ps-lg-4 ps-md-5">
+                                <div class="footer-widget">
+                                    <h3 class="footer-widget-title">Explore</h3>
+                                    <ul class="footer-menu list-style">
+                                        <li>
+                                            <a href="event-details.html">
+                                            Fundraise For Health
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="event-details.html">
+                                            Shelter For Refuge
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="event-details.html">
+                                                Adopt Orphan Child
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="event-details.html">
+                                                Education For Poor
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="event-details.html">
+                                               Clean Water Project
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xl-2 col-lg-2 col-md-6 col-sm-6 ">
+                                <div class="footer-widget">
+                                    <h3 class="footer-widget-title">Other Pages</h3>
+                                    <ul class="footer-menu list-style">
+                                        <li>
+                                            <a href="about.html">
+                                            About us
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="team.html">
+                                               Our Team
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="event.html">
+                                            Recent Events
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="donation.html">
+                                            Make Donation
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="contact.html">
+                                               Get In Touch
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 ps-md-5">
+                                <div class="footer-widget">
+                                    <h3 class="footer-widget-title">Official Info</h3>
+                                    <ul class="contact-info list-style">
+                                        <li>
+                                            <i class="flaticon-pin"></i>
+                                            <h6>Location</h6>
+                                            <p>32 Wallace Johnson Street Freetown, Sierra Leone</p>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-mail"></i>
+                                            <h6>Email</h6>
+                                            <a href="mailto:info@itservicesfreetown.com"><span class="__cf_email__" data-cfemail="d2bbbcb4bd92b1bebbbffcb1bdbf">info@earpi.org</span></a>
+                                        </li>
+                                        <li>
+                                            <i class="flaticon-phone-call"></i>
+                                            <h6>Phone</h6>
+                                            <a href="tel:+12024386441">+1 (202) 438-6441</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8 col-md-6 col-sm-7">
+                                <p class="copyright-text"><i class="ri-copyright-line"></i>Proudly developed by <a href="https://www.linkedin.com/in/ryan-josiah-stewart-19808a152/">Ryan J Stewart</a> &nbsp;&nbsp; My other project <a href="https://www.itservicesfreetown.com">Repair Website</a></p>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-5">
+                                <ul class="social-profile list-style style1">
+                                    <li>
+                                        <a href="https://facebook.com/itservicefreetown" target="_blank">
+                                            <i class="ri-facebook-fill"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                       <a href="https://twitter.com/" target="_blank">
+                                            <i class="ri-twitter-fill"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                       <a href="https://www.linkedin.com/in/ryan-josiah-stewart-19808a152/" target="_blank">
+                                            <i class="ri-linkedin-fill"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="https://www.tiktok.com/@itservicesfreetown" target="_blank">
+                                            <i class="fab fa-tiktok"></i>
+                                         </a>
+                                     </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>          
+            <!-- Footer Section End -->
+        
+        </div>
+        <!-- Page Wrapper End -->
+        
+        <!-- Back-to-top button Start -->
+         <a href="javascript:void(0)" class="back-to-top bounce"><i class="ri-arrow-up-s-line"></i></a>
+        <!-- Back-to-top button End -->
+
+        <!-- Link of JS files -->
+        <script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/form-validator.min.js"></script>
+        <script src="assets/js/contact-form-script.js"></script>
+        <script src="assets/js/aos.js"></script>
+        <script src="assets/js/owl.carousel.min.js"></script>
+        <script src="assets/js/owl-thumb.min.js"></script>
+        <script src="assets/js/odometer.js"></script>
+        <script src="assets/js/circle-progressbar.min.js"></script>
+        <script src="assets/js/fancybox.js"></script>
+        <script src="assets/js/jquery.appear.js"></script>
+        <script src="assets/js/tweenmax.min.js"></script>
+        <script src="assets/js/main.js"></script>
+    </body>
+
+</html>
