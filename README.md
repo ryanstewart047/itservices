@@ -83,7 +83,7 @@ npm start
 2. **Import into Vercel**:
    - Log into [Vercel](https://vercel.com).
    - Click **Add New...** → **Project**.
-   - Select your GitHub repository `ryanstewart047/earpi`.
+   - Select your GitHub repository `ryanstewart047/itservices`.
    - Vercel automatically detects Next.js.
 3. **Set Environment Variables on Vercel**:
    - In the project settings, add:
