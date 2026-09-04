@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { neon } from '@neondatabase/serverless';
 
 export interface Project {
   id: string;
@@ -328,7 +329,114 @@ const INITIAL_MESSAGES: ContactMessage[] = [
   },
 ];
 
-function readDB(): DatabaseSchema {
+// ==========================================
+// POSTGRES / NEON ENGINE
+// ==========================================
+function getDbUrl(): string | undefined {
+  return process.env.DATABASE_URL || process.env.POSTGRES_URL;
+}
+
+let pgInitialized = false;
+
+async function getPgClient() {
+  const url = getDbUrl();
+  if (!url) return null;
+  const sql = neon(url);
+  if (!pgInitialized) {
+    try {
+      await sql`
+        CREATE TABLE IF NOT EXISTS projects (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL,
+          slug TEXT UNIQUE NOT NULL,
+          summary TEXT NOT NULL,
+          description TEXT,
+          category TEXT NOT NULL,
+          location TEXT,
+          status TEXT NOT NULL,
+          funding_goal NUMERIC DEFAULT 0,
+          funding_raised NUMERIC DEFAULT 0,
+          trees_target NUMERIC DEFAULT 0,
+          trees_planted NUMERIC DEFAULT 0,
+          carbon_offset_tons NUMERIC DEFAULT 0,
+          cover_image TEXT,
+          gallery_images JSONB DEFAULT '[]'::jsonb,
+          documents JSONB DEFAULT '[]'::jsonb,
+          featured BOOLEAN DEFAULT FALSE,
+          created_at TIMESTAMPTZ DEFAULT NOW(),
+          updated_at TIMESTAMPTZ DEFAULT NOW()
+        );
+      `;
+      await sql`
+        CREATE TABLE IF NOT EXISTS subscribers (
+          id TEXT PRIMARY KEY,
+          email TEXT UNIQUE NOT NULL,
+          name TEXT,
+          status TEXT DEFAULT 'active',
+          source TEXT,
+          created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+      `;
+      await sql`
+        CREATE TABLE IF NOT EXISTS donations (
+          id TEXT PRIMARY KEY,
+          donor_name TEXT NOT NULL,
+          donor_email TEXT,
+          amount NUMERIC NOT NULL,
+          currency TEXT DEFAULT 'USD',
+          frequency TEXT DEFAULT 'one-time',
+          project_id TEXT,
+          project_name TEXT,
+          payment_method TEXT DEFAULT 'Manual Entry',
+          status TEXT DEFAULT 'completed',
+          notes TEXT,
+          created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+      `;
+      await sql`
+        CREATE TABLE IF NOT EXISTS messages (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          email TEXT NOT NULL,
+          phone TEXT,
+          subject TEXT,
+          message TEXT NOT NULL,
+          is_read BOOLEAN DEFAULT FALSE,
+          created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+      `;
+
+      // Seed projects if empty
+      const existingProjects = await sql`SELECT COUNT(*) as count FROM projects`;
+      if (Number(existingProjects[0]?.count || 0) === 0) {
+        for (const p of INITIAL_PROJECTS) {
+          await sql`
+            INSERT INTO projects (
+              id, title, slug, summary, description, category, location, status,
+              funding_goal, funding_raised, trees_target, trees_planted, carbon_offset_tons,
+              cover_image, gallery_images, documents, featured, created_at, updated_at
+            ) VALUES (
+              ${p.id}, ${p.title}, ${p.slug}, ${p.summary}, ${p.description}, ${p.category}, ${p.location}, ${p.status},
+              ${p.fundingGoal}, ${p.fundingRaised}, ${p.treesTarget}, ${p.treesPlanted}, ${p.carbonOffsetTons},
+              ${p.coverImage}, ${JSON.stringify(p.galleryImages)}, ${JSON.stringify(p.documents)}, ${p.featured},
+              ${p.createdAt}, ${p.updatedAt}
+            ) ON CONFLICT (id) DO NOTHING
+          `;
+        }
+      }
+
+      pgInitialized = true;
+    } catch (e) {
+      console.error('Neon schema initialization error:', e);
+    }
+  }
+  return sql;
+}
+
+// ==========================================
+// LOCAL FILE FALLBACK ENGINE
+// ==========================================
+function readLocalDB(): DatabaseSchema {
   try {
     if (!fs.existsSync(DB_FILE)) {
       const initialData: DatabaseSchema = {
@@ -344,7 +452,6 @@ function readDB(): DatabaseSchema {
     const raw = fs.readFileSync(DB_FILE, 'utf-8');
     return JSON.parse(raw);
   } catch (err) {
-    console.error('Failed to read database file, returning initial fallback:', err);
     return {
       projects: INITIAL_PROJECTS,
       subscribers: INITIAL_SUBSCRIBERS,
@@ -354,22 +461,66 @@ function readDB(): DatabaseSchema {
   }
 }
 
-function writeDB(data: DatabaseSchema): boolean {
+function writeLocalDB(data: DatabaseSchema): boolean {
   try {
     fs.mkdirSync(path.dirname(DB_FILE), { recursive: true });
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
     return true;
-  } catch (err) {
-    console.error('Failed to write database file:', err);
+  } catch {
     return false;
   }
+}
+
+// Mapper for SQL row to Project object
+function mapProjectRow(r: any): Project {
+  return {
+    id: r.id,
+    title: r.title,
+    slug: r.slug,
+    summary: r.summary,
+    description: r.description || '',
+    category: r.category,
+    location: r.location || '',
+    status: r.status,
+    fundingGoal: Number(r.funding_goal) || 0,
+    fundingRaised: Number(r.funding_raised) || 0,
+    treesTarget: Number(r.trees_target) || 0,
+    treesPlanted: Number(r.trees_planted) || 0,
+    carbonOffsetTons: Number(r.carbon_offset_tons) || 0,
+    coverImage: r.cover_image || '/assets/img/project/project-01.jpg',
+    galleryImages: Array.isArray(r.gallery_images) ? r.gallery_images : typeof r.gallery_images === 'string' ? JSON.parse(r.gallery_images) : [],
+    documents: Array.isArray(r.documents) ? r.documents : typeof r.documents === 'string' ? JSON.parse(r.documents) : [],
+    featured: Boolean(r.featured),
+    createdAt: r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString(),
+    updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString(),
+  };
 }
 
 // -----------------------------
 // PROJECT OPERATIONS
 // -----------------------------
 export async function getProjects(filter?: { category?: string; status?: string }): Promise<Project[]> {
-  const db = readDB();
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      let rows: any[] = [];
+      if (filter?.category && filter.category !== 'All' && filter?.status && filter.status !== 'All') {
+        rows = await sql`SELECT * FROM projects WHERE category ILIKE ${filter.category} AND status ILIKE ${filter.status} ORDER BY created_at DESC`;
+      } else if (filter?.category && filter.category !== 'All') {
+        rows = await sql`SELECT * FROM projects WHERE category ILIKE ${filter.category} ORDER BY created_at DESC`;
+      } else if (filter?.status && filter.status !== 'All') {
+        rows = await sql`SELECT * FROM projects WHERE status ILIKE ${filter.status} ORDER BY created_at DESC`;
+      } else {
+        rows = await sql`SELECT * FROM projects ORDER BY created_at DESC`;
+      }
+      return rows.map(mapProjectRow);
+    } catch (e) {
+      console.error('Failed to query Neon Postgres, falling back to local file:', e);
+    }
+  }
+
+  // Fallback to local DB
+  const db = readLocalDB();
   let list = db.projects || [];
   if (filter?.category && filter.category !== 'All') {
     list = list.filter((p) => p.category.toLowerCase() === filter.category!.toLowerCase());
@@ -381,47 +532,117 @@ export async function getProjects(filter?: { category?: string; status?: string 
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  const db = readDB();
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      const rows = await sql`SELECT * FROM projects WHERE slug = ${slug} OR id = ${slug} LIMIT 1`;
+      if (rows.length > 0) {
+        return mapProjectRow(rows[0]);
+      }
+      return null;
+    } catch (e) {
+      console.error('Error fetching project from Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
   return db.projects?.find((p) => p.slug === slug || p.id === slug) || null;
 }
 
 export async function createProject(data: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>): Promise<Project> {
-  const db = readDB();
   const id = `proj-${Date.now()}`;
   const now = new Date().toISOString();
-  const newProject: Project = {
-    ...data,
-    id,
-    createdAt: now,
-    updatedAt: now,
-  };
+  const newProject: Project = { ...data, id, createdAt: now, updatedAt: now };
+
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      await sql`
+        INSERT INTO projects (
+          id, title, slug, summary, description, category, location, status,
+          funding_goal, funding_raised, trees_target, trees_planted, carbon_offset_tons,
+          cover_image, gallery_images, documents, featured, created_at, updated_at
+        ) VALUES (
+          ${newProject.id}, ${newProject.title}, ${newProject.slug}, ${newProject.summary}, ${newProject.description},
+          ${newProject.category}, ${newProject.location}, ${newProject.status},
+          ${newProject.fundingGoal}, ${newProject.fundingRaised}, ${newProject.treesTarget}, ${newProject.treesPlanted},
+          ${newProject.carbonOffsetTons}, ${newProject.coverImage}, ${JSON.stringify(newProject.galleryImages)},
+          ${JSON.stringify(newProject.documents)}, ${newProject.featured}, ${newProject.createdAt}, ${newProject.updatedAt}
+        )
+      `;
+      return newProject;
+    } catch (e) {
+      console.error('Failed to insert project into Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
   db.projects = [newProject, ...(db.projects || [])];
-  writeDB(db);
+  writeLocalDB(db);
   return newProject;
 }
 
 export async function updateProject(id: string, updates: Partial<Project>): Promise<Project | null> {
-  const db = readDB();
-  const index = db.projects?.findIndex((p) => p.id === id);
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      const existing = await getProjectBySlug(id);
+      if (!existing) return null;
+      const merged: Project = { ...existing, ...updates, updatedAt: new Date().toISOString() };
+      await sql`
+        UPDATE projects SET
+          title = ${merged.title},
+          slug = ${merged.slug},
+          summary = ${merged.summary},
+          description = ${merged.description},
+          category = ${merged.category},
+          location = ${merged.location},
+          status = ${merged.status},
+          funding_goal = ${merged.fundingGoal},
+          funding_raised = ${merged.fundingRaised},
+          trees_target = ${merged.treesTarget},
+          trees_planted = ${merged.treesPlanted},
+          carbon_offset_tons = ${merged.carbonOffsetTons},
+          cover_image = ${merged.coverImage},
+          gallery_images = ${JSON.stringify(merged.galleryImages)},
+          documents = ${JSON.stringify(merged.documents)},
+          featured = ${merged.featured},
+          updated_at = ${merged.updatedAt}
+        WHERE id = ${id} OR slug = ${id}
+      `;
+      return merged;
+    } catch (e) {
+      console.error('Failed to update project in Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
+  const index = db.projects?.findIndex((p) => p.id === id || p.slug === id);
   if (index === -1 || index === undefined) return null;
 
   const existing = db.projects[index];
-  const updated: Project = {
-    ...existing,
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
+  const updated: Project = { ...existing, ...updates, updatedAt: new Date().toISOString() };
   db.projects[index] = updated;
-  writeDB(db);
+  writeLocalDB(db);
   return updated;
 }
 
 export async function deleteProject(id: string): Promise<boolean> {
-  const db = readDB();
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      await sql`DELETE FROM projects WHERE id = ${id} OR slug = ${id}`;
+      return true;
+    } catch (e) {
+      console.error('Failed to delete project from Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
   const initialLen = db.projects?.length || 0;
-  db.projects = (db.projects || []).filter((p) => p.id !== id);
+  db.projects = (db.projects || []).filter((p) => p.id !== id && p.slug !== id);
   if (db.projects.length !== initialLen) {
-    writeDB(db);
+    writeLocalDB(db);
     return true;
   }
   return false;
@@ -431,37 +652,78 @@ export async function deleteProject(id: string): Promise<boolean> {
 // SUBSCRIBER OPERATIONS
 // -----------------------------
 export async function getSubscribers(): Promise<Subscriber[]> {
-  const db = readDB();
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      const rows = await sql`SELECT * FROM subscribers ORDER BY created_at DESC`;
+      return rows.map((r: any) => ({
+        id: r.id,
+        email: r.email,
+        name: r.name || undefined,
+        status: r.status || 'active',
+        source: r.source || undefined,
+        createdAt: r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString(),
+      }));
+    } catch (e) {
+      console.error('Failed to query subscribers from Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
   return (db.subscribers || []).sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 }
 
 export async function addSubscriber(email: string, name?: string, source?: string): Promise<Subscriber> {
-  const db = readDB();
-  const existing = db.subscribers?.find((s) => s.email.toLowerCase() === email.toLowerCase());
-  if (existing) {
-    return existing;
-  }
+  const cleanEmail = email.trim().toLowerCase();
   const newSub: Subscriber = {
     id: `sub-${Date.now()}`,
-    email: email.trim().toLowerCase(),
+    email: cleanEmail,
     name: name?.trim(),
     status: 'active',
     source: source || 'Website',
     createdAt: new Date().toISOString(),
   };
+
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      await sql`
+        INSERT INTO subscribers (id, email, name, status, source, created_at)
+        VALUES (${newSub.id}, ${newSub.email}, ${newSub.name || null}, ${newSub.status}, ${newSub.source || null}, ${newSub.createdAt})
+        ON CONFLICT (email) DO NOTHING
+      `;
+      return newSub;
+    } catch (e) {
+      console.error('Failed to add subscriber to Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
+  const existing = db.subscribers?.find((s) => s.email.toLowerCase() === cleanEmail);
+  if (existing) return existing;
   db.subscribers = [newSub, ...(db.subscribers || [])];
-  writeDB(db);
+  writeLocalDB(db);
   return newSub;
 }
 
 export async function deleteSubscriber(id: string): Promise<boolean> {
-  const db = readDB();
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      await sql`DELETE FROM subscribers WHERE id = ${id} OR email = ${id}`;
+      return true;
+    } catch (e) {
+      console.error('Failed to delete subscriber from Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
   const initialLen = db.subscribers?.length || 0;
   db.subscribers = (db.subscribers || []).filter((s) => s.id !== id && s.email !== id);
   if (db.subscribers.length !== initialLen) {
-    writeDB(db);
+    writeLocalDB(db);
     return true;
   }
   return false;
@@ -471,22 +733,60 @@ export async function deleteSubscriber(id: string): Promise<boolean> {
 // DONATION OPERATIONS
 // -----------------------------
 export async function getDonations(): Promise<Donation[]> {
-  const db = readDB();
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      const rows = await sql`SELECT * FROM donations ORDER BY created_at DESC`;
+      return rows.map((r: any) => ({
+        id: r.id,
+        donorName: r.donor_name,
+        donorEmail: r.donor_email || '',
+        amount: Number(r.amount) || 0,
+        currency: r.currency || 'USD',
+        frequency: r.frequency || 'one-time',
+        projectId: r.project_id || undefined,
+        projectName: r.project_name || undefined,
+        paymentMethod: r.payment_method || 'Manual Entry',
+        status: r.status || 'completed',
+        notes: r.notes || '',
+        createdAt: r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString(),
+      }));
+    } catch (e) {
+      console.error('Failed to query donations from Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
   return (db.donations || []).sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 }
 
 export async function addDonation(data: Omit<Donation, 'id' | 'createdAt'>): Promise<Donation> {
-  const db = readDB();
   const newDonation: Donation = {
     ...data,
     id: `don-${Date.now()}`,
     createdAt: new Date().toISOString(),
   };
-  db.donations = [newDonation, ...(db.donations || [])];
 
-  // If tied to a project, update fundingRaised automatically!
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      await sql`
+        INSERT INTO donations (id, donor_name, donor_email, amount, currency, frequency, project_id, project_name, payment_method, status, notes, created_at)
+        VALUES (${newDonation.id}, ${newDonation.donorName}, ${newDonation.donorEmail}, ${newDonation.amount}, ${newDonation.currency}, ${newDonation.frequency}, ${newDonation.projectId || null}, ${newDonation.projectName || null}, ${newDonation.paymentMethod}, ${newDonation.status}, ${newDonation.notes || null}, ${newDonation.createdAt})
+      `;
+      if (data.projectId) {
+        await sql`UPDATE projects SET funding_raised = funding_raised + ${Number(data.amount)} WHERE id = ${data.projectId} OR slug = ${data.projectId}`;
+      }
+      return newDonation;
+    } catch (e) {
+      console.error('Failed to add donation to Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
+  db.donations = [newDonation, ...(db.donations || [])];
   if (data.projectId) {
     const project = db.projects?.find((p) => p.id === data.projectId);
     if (project) {
@@ -494,17 +794,26 @@ export async function addDonation(data: Omit<Donation, 'id' | 'createdAt'>): Pro
       project.updatedAt = new Date().toISOString();
     }
   }
-
-  writeDB(db);
+  writeLocalDB(db);
   return newDonation;
 }
 
 export async function deleteDonation(id: string): Promise<boolean> {
-  const db = readDB();
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      await sql`DELETE FROM donations WHERE id = ${id}`;
+      return true;
+    } catch (e) {
+      console.error('Failed to delete donation from Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
   const initialLen = db.donations?.length || 0;
   db.donations = (db.donations || []).filter((d) => d.id !== id);
   if (db.donations.length !== initialLen) {
-    writeDB(db);
+    writeLocalDB(db);
     return true;
   }
   return false;
@@ -514,42 +823,95 @@ export async function deleteDonation(id: string): Promise<boolean> {
 // CONTACT MESSAGE OPERATIONS
 // -----------------------------
 export async function getContactMessages(): Promise<ContactMessage[]> {
-  const db = readDB();
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      const rows = await sql`SELECT * FROM messages ORDER BY created_at DESC`;
+      return rows.map((r: any) => ({
+        id: r.id,
+        name: r.name,
+        email: r.email,
+        phone: r.phone || undefined,
+        subject: r.subject || '',
+        message: r.message || '',
+        isRead: Boolean(r.is_read),
+        createdAt: r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString(),
+      }));
+    } catch (e) {
+      console.error('Failed to query messages from Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
   return (db.messages || []).sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 }
 
 export async function addContactMessage(data: Omit<ContactMessage, 'id' | 'isRead' | 'createdAt'>): Promise<ContactMessage> {
-  const db = readDB();
   const newMsg: ContactMessage = {
     ...data,
     id: `msg-${Date.now()}`,
     isRead: false,
     createdAt: new Date().toISOString(),
   };
+
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      await sql`
+        INSERT INTO messages (id, name, email, phone, subject, message, is_read, created_at)
+        VALUES (${newMsg.id}, ${newMsg.name}, ${newMsg.email}, ${newMsg.phone || null}, ${newMsg.subject}, ${newMsg.message}, false, ${newMsg.createdAt})
+      `;
+      return newMsg;
+    } catch (e) {
+      console.error('Failed to insert message into Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
   db.messages = [newMsg, ...(db.messages || [])];
-  writeDB(db);
+  writeLocalDB(db);
   return newMsg;
 }
 
 export async function toggleMessageRead(id: string, isRead: boolean): Promise<boolean> {
-  const db = readDB();
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      await sql`UPDATE messages SET is_read = ${isRead} WHERE id = ${id}`;
+      return true;
+    } catch (e) {
+      console.error('Failed to toggle message read state in Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
   const msg = db.messages?.find((m) => m.id === id);
   if (msg) {
     msg.isRead = isRead;
-    writeDB(db);
+    writeLocalDB(db);
     return true;
   }
   return false;
 }
 
 export async function deleteContactMessage(id: string): Promise<boolean> {
-  const db = readDB();
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      await sql`DELETE FROM messages WHERE id = ${id}`;
+      return true;
+    } catch (e) {
+      console.error('Failed to delete message from Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
   const initialLen = db.messages?.length || 0;
   db.messages = (db.messages || []).filter((m) => m.id !== id);
   if (db.messages.length !== initialLen) {
-    writeDB(db);
+    writeLocalDB(db);
     return true;
   }
   return false;
@@ -559,11 +921,10 @@ export async function deleteContactMessage(id: string): Promise<boolean> {
 // SYSTEM METRICS / KPI SUMMARY
 // -----------------------------
 export async function getSystemKPIs() {
-  const db = readDB();
-  const projects = db.projects || [];
-  const donations = db.donations || [];
-  const subscribers = db.subscribers || [];
-  const messages = db.messages || [];
+  const projects = await getProjects();
+  const donations = await getDonations();
+  const subscribers = await getSubscribers();
+  const messages = await getContactMessages();
 
   const totalDonations = donations
     .filter((d) => d.status === 'completed')
