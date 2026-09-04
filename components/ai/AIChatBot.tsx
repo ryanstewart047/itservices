@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { MessageSquareText, X, Send, Sparkles } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -98,38 +99,45 @@ export default function AIChatBot() {
         aria-label="Open EARPI AI Climate Assistant"
         style={{
           position: 'fixed',
-          bottom: '90px',
-          right: '30px',
-          width: '58px',
-          height: '58px',
+          bottom: '28px',
+          right: '28px',
+          width: '56px',
+          height: '56px',
           borderRadius: '50%',
-          backgroundColor: '#338F7A',
+          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
           color: '#ffffff',
           border: 'none',
-          boxShadow: '0 6px 20px rgba(51, 143, 122, 0.45)',
+          boxShadow: '0 6px 22px rgba(16, 185, 129, 0.45)',
           cursor: 'pointer',
           zIndex: 995,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          transition: 'all 0.3s ease',
+          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.06)';
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
         }}
       >
         {isOpen ? (
-          <span style={{ fontSize: '24px', fontWeight: 'bold' }}>×</span>
+          <X size={26} strokeWidth={2.4} />
         ) : (
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <i className="ri-robot-line" style={{ fontSize: '26px' }}></i>
+            <MessageSquareText size={25} strokeWidth={2.2} />
             <span
               style={{
                 position: 'absolute',
-                top: '-4px',
-                right: '-4px',
+                top: '-3px',
+                right: '-3px',
                 width: '10px',
                 height: '10px',
                 borderRadius: '50%',
-                backgroundColor: '#4ade80',
-                border: '2px solid #338F7A',
+                backgroundColor: '#34d399',
+                border: '2px solid #059669',
+                boxShadow: '0 0 6px rgba(52, 211, 153, 0.9)',
               }}
             ></span>
           </div>
@@ -141,15 +149,15 @@ export default function AIChatBot() {
         <div
           style={{
             position: 'fixed',
-            bottom: '160px',
+            bottom: '96px',
             right: '25px',
             width: '380px',
             maxWidth: 'calc(100vw - 40px)',
             height: '520px',
-            maxHeight: 'calc(100vh - 180px)',
+            maxHeight: 'calc(100vh - 120px)',
             backgroundColor: '#ffffff',
             borderRadius: '16px',
-            boxShadow: '0 12px 35px rgba(0,0,0,0.25)',
+            boxShadow: '0 16px 40px rgba(0,0,0,0.25)',
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
@@ -160,12 +168,13 @@ export default function AIChatBot() {
           {/* Header */}
           <div
             style={{
-              background: 'linear-gradient(135deg, #1b4d3e 0%, #338F7A 100%)',
+              background: 'linear-gradient(135deg, #061a14 0%, #0d3829 100%)',
               padding: '14px 18px',
               color: '#ffffff',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              borderBottom: '1px solid rgba(16, 185, 129, 0.2)',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -174,13 +183,14 @@ export default function AIChatBot() {
                   width: '36px',
                   height: '36px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(255,255,255,0.2)',
+                  backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                  border: '1px solid rgba(16, 185, 129, 0.35)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <i className="ri-leaf-line" style={{ fontSize: '20px' }}></i>
+                <Sparkles size={18} color="#34d399" />
               </div>
               <div>
                 <h4 style={{ margin: 0, fontSize: '15px', color: '#fff', fontWeight: 'bold' }}>
@@ -192,24 +202,30 @@ export default function AIChatBot() {
                       width: '6px',
                       height: '6px',
                       borderRadius: '50%',
-                      backgroundColor: '#4ade80',
+                      backgroundColor: '#34d399',
                     }}
                   ></span>
-                  Online • Sierra Leone & Global
+                  Online • Sierra Leone &amp; Global
                 </div>
               </div>
             </div>
             <button
               onClick={() => setIsOpen(false)}
+              aria-label="Close Chat"
               style={{
-                background: 'transparent',
+                background: 'rgba(255,255,255,0.08)',
                 border: 'none',
+                borderRadius: '50%',
+                width: '30px',
+                height: '30px',
                 color: '#ffffff',
-                fontSize: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 cursor: 'pointer',
               }}
             >
-              ×
+              <X size={18} />
             </button>
           </div>
 
@@ -336,11 +352,12 @@ export default function AIChatBot() {
             <button
               onClick={() => handleSend()}
               disabled={loading || !input.trim()}
+              aria-label="Send Message"
               style={{
                 width: '36px',
                 height: '36px',
                 borderRadius: '50%',
-                backgroundColor: '#338F7A',
+                backgroundColor: '#10b981',
                 color: '#ffffff',
                 border: 'none',
                 display: 'flex',
@@ -348,9 +365,10 @@ export default function AIChatBot() {
                 justifyContent: 'center',
                 cursor: 'pointer',
                 opacity: loading || !input.trim() ? 0.6 : 1,
+                transition: 'background-color 0.2s',
               }}
             >
-              <i className="ri-send-plane-fill"></i>
+              <Send size={15} />
             </button>
           </div>
         </div>

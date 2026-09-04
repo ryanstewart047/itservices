@@ -165,7 +165,8 @@
     width: 35px;
     height: 35px;
     line-height: 32px;
-    right: 10px;
+    left: 16px;
+    right: auto;
   }
   .back-to-top i {
     font-size: 18px;

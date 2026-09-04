@@ -878,7 +878,8 @@ select {
   display: none;
   position: fixed;
   bottom: 230px;
-  right: 20px;
+  left: 28px;
+  right: auto;
   z-index: 999;
   border-radius: 5px;
   background: #338F7A;

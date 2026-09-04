@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { ArrowUp } from 'lucide-react';
 
 export default function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -34,20 +35,30 @@ export default function BackToTop() {
         justifyContent: 'center',
         cursor: 'pointer',
         border: 'none',
-        background: '#338F7A',
-        color: '#fff',
+        background: '#10b981',
+        color: '#ffffff',
         borderRadius: '50%',
-        width: '45px',
-        height: '45px',
+        width: '46px',
+        height: '46px',
         position: 'fixed',
-        bottom: '30px',
-        right: '30px',
+        bottom: '28px',
+        left: '28px',
+        right: 'auto',
         zIndex: 990,
-        boxShadow: '0 4px 15px rgba(51, 143, 122, 0.4)',
-        transition: 'all 0.3s ease',
+        boxShadow: '0 4px 16px rgba(16, 185, 129, 0.45)',
+        transition: 'transform 0.2s ease, background 0.2s ease',
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-3px)';
+        (e.currentTarget as HTMLButtonElement).style.background = '#059669';
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)';
+        (e.currentTarget as HTMLButtonElement).style.background = '#10b981';
       }}
     >
-      <i className="ri-arrow-up-s-line" style={{ fontSize: '24px' }}></i>
+      <ArrowUp size={22} strokeWidth={2.5} />
     </button>
   );
 }
+
