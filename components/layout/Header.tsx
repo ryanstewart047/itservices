@@ -86,15 +86,26 @@ export default function Header() {
               </div>
             </div>
             <div className="col-lg-4 col-md-4">
-              <div className="header-top-right">
-                <div className="social-profile list-style">
-                  <ul>
-                    <li><a href="https://www.facebook.com/earpi.org" target="_blank" rel="noreferrer"><i className="ri-facebook-fill"></i></a></li>
-                    <li><a href="https://x.com/earpiorg" target="_blank" rel="noreferrer"><i className="ri-twitter-x-line"></i></a></li>
-                    <li><a href="https://www.instagram.com/earpi.org/" target="_blank" rel="noreferrer"><i className="ri-instagram-line"></i></a></li>
-                    <li><a href="https://www.linkedin.com/company/earpi-org" target="_blank" rel="noreferrer"><i className="ri-linkedin-fill"></i></a></li>
-                    <li><a href="https://www.youtube.com/@earpiorg" target="_blank" rel="noreferrer"><i className="ri-youtube-fill"></i></a></li>
-                  </ul>
+              <div className="header-top-right top-bar-social-wrap">
+                <div className="social-profile-clean">
+                  {[
+                    { href: 'https://www.facebook.com/earpi.org', icon: 'ri-facebook-fill', label: 'Facebook' },
+                    { href: 'https://x.com/earpiorg', icon: 'ri-twitter-x-line', label: 'X (Twitter)' },
+                    { href: 'https://www.instagram.com/earpi.org/', icon: 'ri-instagram-line', label: 'Instagram' },
+                    { href: 'https://www.linkedin.com/company/earpi-org', icon: 'ri-linkedin-fill', label: 'LinkedIn' },
+                    { href: 'https://www.youtube.com/@earpiorg', icon: 'ri-youtube-fill', label: 'YouTube' },
+                  ].map((s) => (
+                    <a
+                      key={s.label}
+                      href={s.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={s.label}
+                      className="top-social-link"
+                    >
+                      <i className={s.icon}></i>
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>
@@ -105,8 +116,17 @@ export default function Header() {
       {/* Header Navigation */}
       <div className="header-bottom">
         <div className="container">
-          <nav className="navbar navbar-expand-lg navbar-light" style={{ position: 'relative' }}>
-            <Link className="navbar-brand" href="/">
+          <nav
+            className="navbar navbar-expand-lg navbar-light"
+            style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+            }}
+          >
+            <Link className="navbar-brand" href="/" style={{ flexShrink: 0, marginRight: '24px' }}>
               <img className="logo-light" src="/assets/img/logo.png" alt="EARPI Logo" style={{ maxHeight: '60px' }} />
               <img className="logo-dark" src="/assets/img/logo-white.png" alt="EARPI Logo" style={{ maxHeight: '60px' }} />
             </Link>
@@ -155,19 +175,12 @@ export default function Header() {
               />
             )}
 
-            {/* Main Menu — visible on desktop always, sliding panel on mobile */}
+            {/* Main Menu — positioned to far right on desktop, slide drawer on mobile */}
             <div
               ref={menuRef}
-              style={{
-                /* Desktop: normal flex row */
-                /* Mobile: slide-in panel from left */
-              }}
               className="main-menu-wrap"
-              // Override Bootstrap's collapse hiding with inline styles
               {...({
                 style: {
-                  // On desktop (lg+): reset to flex
-                  // On mobile: full-height overlay
                   position: 'fixed' as const,
                   top: 0,
                   left: mobileMenuOpen ? 0 : '-100%',
@@ -208,7 +221,7 @@ export default function Header() {
                 <i className="ri-close-line"></i>
               </button>
 
-              <ul className="navbar-nav ms-auto" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              <ul className="navbar-nav" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 <li className="nav-item">
                   <Link href="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>
                     Home
@@ -332,7 +345,7 @@ export default function Header() {
                 </li>
               </ul>
 
-              {/* Desktop-only Donate button (outside ul) */}
+              {/* Desktop-only Donate button (outside ul, right next to nav items) */}
               <div className="others-options d-none d-lg-flex">
                 <div className="header-btn">
                   <Link href="/donation" className="btn style1">
@@ -342,8 +355,52 @@ export default function Header() {
               </div>
             </div>
 
-            {/* Desktop menu override — show as normal flex on large screens */}
+            {/* Custom Styling overrides */}
             <style>{`
+              /* Top bar social icons clean styling */
+              .top-bar-social-wrap {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+                height: 100% !important;
+              }
+              .social-profile-clean {
+                display: flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+              }
+              .top-social-link {
+                width: 32px !important;
+                height: 32px !important;
+                border-radius: 50% !important;
+                background-color: rgba(51, 143, 122, 0.15) !important;
+                color: #338F7A !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                text-decoration: none !important;
+                font-size: 15px !important;
+                transition: all 0.2s ease !important;
+                border: 1px solid rgba(51, 143, 122, 0.25) !important;
+              }
+              .top-social-link:hover {
+                background-color: #338F7A !important;
+                color: #ffffff !important;
+                transform: translateY(-2px) !important;
+                box-shadow: 0 4px 10px rgba(51, 143, 122, 0.3) !important;
+              }
+              .top-social-link i {
+                line-height: 1 !important;
+              }
+              /* Disable legacy before pseudo-elements and borders on header-top-right */
+              .header-wrap .header-top .header-top-right .social-profile:before,
+              .header-wrap .header-top .header-top-right:before {
+                display: none !important;
+              }
+
+              /* Desktop Menu — positioned to the FAR RIGHT */
               @media (min-width: 992px) {
                 .main-menu-wrap {
                   position: static !important;
@@ -356,12 +413,17 @@ export default function Header() {
                   transition: none !important;
                   display: flex !important;
                   align-items: center !important;
+                  justify-content: flex-end !important;
+                  margin-left: auto !important;
                   flex: 1 !important;
                 }
                 .main-menu-wrap .navbar-nav {
+                  display: flex !important;
                   flex-direction: row !important;
                   align-items: center !important;
                   gap: 4px !important;
+                  margin-left: auto !important;
+                  margin-right: 0 !important;
                 }
                 .main-menu-wrap .nav-link {
                   color: inherit !important;
@@ -370,13 +432,23 @@ export default function Header() {
                   font-size: 15px !important;
                 }
                 .main-menu-wrap .others-options {
-                  margin-left: auto !important;
+                  margin-left: 20px !important;
+                  margin-right: 0 !important;
+                  display: flex !important;
+                  align-items: center !important;
                 }
                 .main-menu-wrap > button.d-lg-none {
                   display: none !important;
                 }
               }
+
+              /* Mobile layout */
               @media (max-width: 991.98px) {
+                .top-bar-social-wrap {
+                  justify-content: center !important;
+                  margin-top: 10px !important;
+                  margin-bottom: 6px !important;
+                }
                 .main-menu-wrap .nav-link {
                   color: #d1f7e8 !important;
                   padding: 13px 0 !important;
