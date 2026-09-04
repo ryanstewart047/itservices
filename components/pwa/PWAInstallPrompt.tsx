@@ -102,16 +102,14 @@ export default function PWAInstallPrompt() {
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
         <img
-          src="/assets/img/logo.png"
+          src="/icons/icon-192x192.png"
           alt="EARPI App"
           style={{
             width: '48px',
             height: '48px',
             borderRadius: '12px',
-            objectFit: 'contain',
-            backgroundColor: '#f4fbf9',
-            padding: '4px',
-            border: '1px solid #338F7A',
+            objectFit: 'cover',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
           }}
         />
         <div style={{ flex: 1 }}>

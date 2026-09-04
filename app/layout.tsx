@@ -11,8 +11,15 @@ export const metadata: Metadata = {
     'Earth Regenerative Projects International (EARPI) is a registered non-profit corporation dedicated to ecosystem restoration, climate resilience, and sustainable development in Sierra Leone and worldwide.',
   manifest: '/manifest.json',
   icons: {
-    icon: '/assets/img/favicon.png',
-    apple: '/icons/icon-192x192.png',
+    icon: [
+      { url: '/assets/img/favicon.png', sizes: '64x64', type: 'image/png' },
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+    ],
   },
   appleWebApp: {
     capable: true,

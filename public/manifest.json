@@ -1,15 +1,16 @@
 {
-  "name": "EARPI - Earth Regenerative Project International",
+  "name": "EARPI - Earth Regenerative Projects International",
   "short_name": "EARPI",
-  "description": "Earth Regenerative Project International - Building climate resilience, youth empowerment, and regenerative ecosystems in Sierra Leone and globally.",
+  "description": "Earth Regenerative Projects International - Catalyzing ecosystem restoration, climate resilience, and youth empowerment in Sierra Leone and globally.",
   "start_url": "/",
   "id": "/",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#ffffff",
-  "theme_color": "#338F7A",
-  "categories": ["non-profit", "environment", "sustainability"],
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#061a14",
+  "theme_color": "#0d2b22",
+  "categories": ["non-profit", "environment", "sustainability", "climate"],
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -30,6 +31,12 @@
       "purpose": "maskable"
     },
     {
+      "src": "/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
       "src": "/assets/img/favicon.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/png"
@@ -42,7 +49,7 @@
       "description": "Learn about EARPI's mission and team"
     },
     {
-      "name": "Donate",
+      "name": "Donate Now",
       "url": "/donation",
       "description": "Support our regenerative climate projects"
     },

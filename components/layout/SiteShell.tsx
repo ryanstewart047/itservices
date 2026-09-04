@@ -9,6 +9,7 @@ import NewsletterPopup from '@/components/layout/NewsletterPopup';
 import AIChatBot from '@/components/ai/AIChatBot';
 import PWAInstallPrompt from '@/components/pwa/PWAInstallPrompt';
 import GlobalFormHandler from '@/components/forms/GlobalFormHandler';
+import MobileFlashLoader from '@/components/layout/MobileFlashLoader';
 
 export default function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -32,6 +33,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       <NewsletterPopup />
       <PWAInstallPrompt />
       <GlobalFormHandler />
+      <MobileFlashLoader />
     </>
   );
 }
