@@ -153,26 +153,10 @@ export default function Header() {
                   </Link>
                 </li>
 
-                <li className={`nav-item has-dropdown ${openDropdown === 'projects' ? 'menu-open' : ''}`}>
-                  <a
-                    href="#projects"
-                    className={`nav-link ${pathname.startsWith('/project') ? 'active' : ''}`}
-                    onClick={(e) => toggleDropdown('projects', e)}
-                  >
-                    Projects <i className="ri-arrow-down-s-line"></i>
-                  </a>
-                  <ul className={`dropdown-menu ${openDropdown === 'projects' ? 'show d-block' : ''}`}>
-                    <li className="nav-item">
-                      <Link href="/project-one" className="nav-link">
-                        Projects Overview
-                      </Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link href="/project-two" className="nav-link">
-                        Project Details
-                      </Link>
-                    </li>
-                  </ul>
+                <li className="nav-item">
+                  <Link href="/projects" className={`nav-link ${pathname.startsWith('/project') ? 'active' : ''}`}>
+                    Projects
+                  </Link>
                 </li>
 
                 <li className={`nav-item has-dropdown ${openDropdown === 'priorities' ? 'menu-open' : ''}`}>
@@ -206,31 +190,43 @@ export default function Header() {
                     </li>
                     <li className="nav-item">
                       <Link href="/priority-five" className="nav-link">
-                        Priority 5: Water & Climate Adaptation
+                        Priority 5: Water &amp; Climate Adaptation
                       </Link>
                     </li>
                   </ul>
                 </li>
 
-                <li className={`nav-item has-dropdown ${openDropdown === 'pages' ? 'menu-open' : ''}`}>
+                <li className={`nav-item has-dropdown ${openDropdown === 'people' ? 'menu-open' : ''}`}>
                   <a
-                    href="#pages"
+                    href="#people"
+                    className={`nav-link ${pathname === '/team' || pathname === '/ambassadors' ? 'active' : ''}`}
+                    onClick={(e) => toggleDropdown('people', e)}
+                  >
+                    People <i className="ri-arrow-down-s-line"></i>
+                  </a>
+                  <ul className={`dropdown-menu ${openDropdown === 'people' ? 'show d-block' : ''}`}>
+                    <li className="nav-item">
+                      <Link href="/team" className="nav-link">
+                        Board &amp; Leadership
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link href="/ambassadors" className="nav-link">
+                        Global Ambassadors
+                      </Link>
+                    </li>
+                  </ul>
+                </li>
+
+                <li className={`nav-item has-dropdown ${openDropdown === 'more' ? 'menu-open' : ''}`}>
+                  <a
+                    href="#more"
                     className="nav-link"
-                    onClick={(e) => toggleDropdown('pages', e)}
+                    onClick={(e) => toggleDropdown('more', e)}
                   >
                     More <i className="ri-arrow-down-s-line"></i>
                   </a>
-                  <ul className={`dropdown-menu ${openDropdown === 'pages' ? 'show d-block' : ''}`}>
-                    <li className="nav-item">
-                      <Link href="/ambassadors" className="nav-link">
-                        Ambassadors
-                      </Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link href="/team" className="nav-link">
-                        Our Team
-                      </Link>
-                    </li>
+                  <ul className={`dropdown-menu ${openDropdown === 'more' ? 'show d-block' : ''}`}>
                     <li className="nav-item">
                       <Link href="/event" className="nav-link">
                         Events
@@ -252,12 +248,6 @@ export default function Header() {
                       </Link>
                     </li>
                   </ul>
-                </li>
-
-                <li className="nav-item">
-                  <Link href="/blog" className={`nav-link ${pathname.startsWith('/blog') ? 'active' : ''}`}>
-                    Blog
-                  </Link>
                 </li>
 
                 <li className="nav-item">

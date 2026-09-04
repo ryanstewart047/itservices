@@ -1,15 +1,11 @@
 import type { Metadata } from 'next';
-import pageData from '@/data/pages/ambassadors.json';
+import AmbassadorCards from './AmbassadorCards';
 
 export const metadata: Metadata = {
-  title: pageData.title,
-  description: pageData.description,
+  title: 'Global Ambassadors | EARPI',
+  description: 'Meet EARPI\'s global ambassadors and international advisors championing climate resilience and sustainable development worldwide.',
 };
 
 export default function AmbassadorsPage() {
-  return (
-    <div>
-      <div dangerouslySetInnerHTML={{ __html: pageData.content }} />
-    </div>
-  );
+  return <AmbassadorCards />;
 }

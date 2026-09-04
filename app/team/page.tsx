@@ -1,15 +1,11 @@
 import type { Metadata } from 'next';
-import pageData from '@/data/pages/team.json';
+import TeamCards from './TeamCards';
 
 export const metadata: Metadata = {
-  title: pageData.title,
-  description: pageData.description,
+  title: 'Board & Leadership Team | EARPI',
+  description: 'Meet the dedicated board members and leadership team driving EARPI\'s climate resilience mission across West Africa.',
 };
 
 export default function TeamPage() {
-  return (
-    <div>
-      <div dangerouslySetInnerHTML={{ __html: pageData.content }} />
-    </div>
-  );
+  return <TeamCards />;
 }
