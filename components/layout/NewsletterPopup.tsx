@@ -180,7 +180,7 @@ export default function NewsletterPopup() {
                 Join the Climate Movement
               </h3>
               <p style={{ margin: 0, fontSize: '12.5px', color: '#a7f3d0' }}>
-                USA Non-profit MA 001751059 • Freetown, Sierra Leone
+                USA 501(c)(3) Non-Profit • Freetown, Sierra Leone
               </p>
             </div>
 

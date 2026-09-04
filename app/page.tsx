@@ -130,7 +130,7 @@ export default async function HomePage() {
             }}
           >
             <ShieldCheck size={16} />
-            <span>USA 501(c)(3) Non-Profit MA 001751059 • Freetown, Sierra Leone</span>
+            <span>USA 501(c)(3) Non-Profit • Freetown, Sierra Leone</span>
           </div>
 
           {/* Main Title */}
@@ -959,24 +959,7 @@ export default async function HomePage() {
 
           <HomeNewsletterForm />
 
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '18px',
-              marginTop: '28px',
-              fontSize: '12.5px',
-              color: '#a7f3d0',
-              flexWrap: 'wrap',
-            }}
-          >
-            <span>🔒 Zero Spam Guarantee</span>
-            <span>•</span>
-            <span>🌱 Verified Field Data</span>
-            <span>•</span>
-            <span>📊 100% Non-Profit Transparency</span>
-          </div>
+
         </div>
       </section>
     </main>

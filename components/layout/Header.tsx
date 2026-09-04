@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -9,24 +9,36 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname = usePathname();
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 100) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
-    };
+    const handleScroll = () => setIsSticky(window.scrollY > 100);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on page navigation
+  // Close mobile menu on navigation
   useEffect(() => {
     setMobileMenuOpen(false);
     setOpenDropdown(null);
   }, [pathname]);
+
+  // Close on outside click
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMobileMenuOpen(false);
+      }
+    };
+    if (mobileMenuOpen) document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [mobileMenuOpen]);
+
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileMenuOpen]);
 
   const toggleDropdown = (name: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -55,7 +67,7 @@ export default function Header() {
                     display: 'inline-block',
                   }}
                 >
-                  USA Non-profit Corporation Registration MA 001751059; EIN: 99-0979318
+                  USA 501(c)(3) Non-Profit • EIN: 99-0979318
                 </div>
                 <ul className="contact-info list-style">
                   <li>
@@ -75,32 +87,15 @@ export default function Header() {
             </div>
             <div className="col-lg-4 col-md-4">
               <div className="header-top-right">
-                <div className="select-lang">
-                  <i className="ri-earth-fill"></i>
-                  <span style={{ fontSize: '13px', color: '#fff', marginLeft: '5px' }}>Global (EN)</span>
+                <div className="social-profile list-style">
+                  <ul>
+                    <li><a href="https://www.facebook.com/earpi.org" target="_blank" rel="noreferrer"><i className="ri-facebook-fill"></i></a></li>
+                    <li><a href="https://x.com/earpiorg" target="_blank" rel="noreferrer"><i className="ri-twitter-x-line"></i></a></li>
+                    <li><a href="https://www.instagram.com/earpi.org/" target="_blank" rel="noreferrer"><i className="ri-instagram-line"></i></a></li>
+                    <li><a href="https://www.linkedin.com/company/earpi-org" target="_blank" rel="noreferrer"><i className="ri-linkedin-fill"></i></a></li>
+                    <li><a href="https://www.youtube.com/@earpiorg" target="_blank" rel="noreferrer"><i className="ri-youtube-fill"></i></a></li>
+                  </ul>
                 </div>
-                <ul className="social-profile list-style style1">
-                  <li>
-                    <a href="https://facebook.com/itservicefreetown" target="_blank" rel="noopener noreferrer">
-                      <i className="ri-facebook-fill"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://twitter.com/earpsierraleone" target="_blank" rel="noopener noreferrer">
-                      <i className="ri-twitter-fill"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://www.linkedin.com/in/ryan-josiah-stewart-19808a152/" target="_blank" rel="noopener noreferrer">
-                      <i className="ri-linkedin-fill"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://www.tiktok.com/@itservicesfreetown" target="_blank" rel="noopener noreferrer">
-                      <i className="fab fa-tiktok"></i>
-                    </a>
-                  </li>
-                </ul>
               </div>
             </div>
           </div>
@@ -110,37 +105,110 @@ export default function Header() {
       {/* Header Navigation */}
       <div className="header-bottom">
         <div className="container">
-          <nav className="navbar navbar-expand-md navbar-light">
+          <nav className="navbar navbar-expand-lg navbar-light" style={{ position: 'relative' }}>
             <Link className="navbar-brand" href="/">
               <img className="logo-light" src="/assets/img/logo.png" alt="EARPI Logo" style={{ maxHeight: '60px' }} />
               <img className="logo-dark" src="/assets/img/logo-white.png" alt="EARPI Logo" style={{ maxHeight: '60px' }} />
             </Link>
 
             {/* Mobile Hamburger Button */}
-            <div className="mobile-bar-wrap d-lg-none">
-              <button
-                type="button"
-                className="mobile-menu"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label="Toggle navigation"
+            <button
+              type="button"
+              className="d-lg-none"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle navigation"
+              style={{
+                background: 'transparent',
+                border: '2px solid #338F7A',
+                borderRadius: '6px',
+                padding: '6px 10px',
+                cursor: 'pointer',
+                marginLeft: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '5px',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {mobileMenuOpen ? (
+                <i className="ri-close-line" style={{ fontSize: '22px', color: '#338F7A', lineHeight: 1 }}></i>
+              ) : (
+                <>
+                  <span style={{ display: 'block', width: '22px', height: '2px', background: '#338F7A' }}></span>
+                  <span style={{ display: 'block', width: '22px', height: '2px', background: '#338F7A' }}></span>
+                  <span style={{ display: 'block', width: '22px', height: '2px', background: '#338F7A' }}></span>
+                </>
+              )}
+            </button>
+
+            {/* Mobile Backdrop */}
+            {mobileMenuOpen && (
+              <div
+                onClick={() => setMobileMenuOpen(false)}
                 style={{
-                  background: 'transparent',
+                  position: 'fixed',
+                  inset: 0,
+                  background: 'rgba(0,0,0,0.5)',
+                  zIndex: 998,
+                }}
+              />
+            )}
+
+            {/* Main Menu — visible on desktop always, sliding panel on mobile */}
+            <div
+              ref={menuRef}
+              style={{
+                /* Desktop: normal flex row */
+                /* Mobile: slide-in panel from left */
+              }}
+              className="main-menu-wrap"
+              // Override Bootstrap's collapse hiding with inline styles
+              {...({
+                style: {
+                  // On desktop (lg+): reset to flex
+                  // On mobile: full-height overlay
+                  position: 'fixed' as const,
+                  top: 0,
+                  left: mobileMenuOpen ? 0 : '-100%',
+                  width: '280px',
+                  height: '100vh',
+                  background: '#0d2b22',
+                  zIndex: 999,
+                  overflowY: 'auto' as const,
+                  transition: 'left 0.35s cubic-bezier(.4,0,.2,1)',
+                  padding: '60px 24px 40px',
+                  display: 'flex',
+                  flexDirection: 'column' as const,
+                },
+              })}
+              id="navbarSupportedContent"
+            >
+              {/* Mobile close button inside panel */}
+              <button
+                className="d-lg-none"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  position: 'absolute',
+                  top: '16px',
+                  right: '16px',
+                  background: 'rgba(255,255,255,0.08)',
                   border: 'none',
-                  fontSize: '28px',
-                  color: '#338F7A',
+                  borderRadius: '50%',
+                  width: '36px',
+                  height: '36px',
                   cursor: 'pointer',
+                  color: '#fff',
+                  fontSize: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
-                <i className={mobileMenuOpen ? 'ri-close-line' : 'ri-menu-line'}></i>
-              </button>
-            </div>
-
-            {/* Main Menu Links */}
-            <div className={`collapse navbar-collapse main-menu-wrap ${mobileMenuOpen ? 'open' : ''}`} id="navbarSupportedContent">
-              <div className="menu-close d-lg-none" onClick={() => setMobileMenuOpen(false)}>
                 <i className="ri-close-line"></i>
-              </div>
-              <ul className="navbar-nav ms-auto">
+              </button>
+
+              <ul className="navbar-nav ms-auto" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 <li className="nav-item">
                   <Link href="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>
                     Home
@@ -255,9 +323,17 @@ export default function Header() {
                     Contact
                   </Link>
                 </li>
+
+                {/* Donate button inside mobile menu */}
+                <li className="nav-item d-lg-none" style={{ marginTop: '16px' }}>
+                  <Link href="/donation" className="btn style1" style={{ display: 'block', textAlign: 'center' }}>
+                    Donate Now <i className="ri-heart-line"></i>
+                  </Link>
+                </li>
               </ul>
 
-              <div className="others-options md-none">
+              {/* Desktop-only Donate button (outside ul) */}
+              <div className="others-options d-none d-lg-flex">
                 <div className="header-btn">
                   <Link href="/donation" className="btn style1">
                     Donate Now <i className="ri-heart-line"></i>
@@ -265,6 +341,72 @@ export default function Header() {
                 </div>
               </div>
             </div>
+
+            {/* Desktop menu override — show as normal flex on large screens */}
+            <style>{`
+              @media (min-width: 992px) {
+                .main-menu-wrap {
+                  position: static !important;
+                  width: auto !important;
+                  height: auto !important;
+                  background: transparent !important;
+                  padding: 0 !important;
+                  flex-direction: row !important;
+                  overflow: visible !important;
+                  transition: none !important;
+                  display: flex !important;
+                  align-items: center !important;
+                  flex: 1 !important;
+                }
+                .main-menu-wrap .navbar-nav {
+                  flex-direction: row !important;
+                  align-items: center !important;
+                  gap: 4px !important;
+                }
+                .main-menu-wrap .nav-link {
+                  color: inherit !important;
+                  padding: 8px 12px !important;
+                  border-bottom: none !important;
+                  font-size: 15px !important;
+                }
+                .main-menu-wrap .others-options {
+                  margin-left: auto !important;
+                }
+                .main-menu-wrap > button.d-lg-none {
+                  display: none !important;
+                }
+              }
+              @media (max-width: 991.98px) {
+                .main-menu-wrap .nav-link {
+                  color: #d1f7e8 !important;
+                  padding: 13px 0 !important;
+                  border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+                  font-size: 15px !important;
+                  display: block !important;
+                }
+                .main-menu-wrap .nav-link.active {
+                  color: #34d399 !important;
+                }
+                .main-menu-wrap .dropdown-menu {
+                  background: rgba(255,255,255,0.06) !important;
+                  border: none !important;
+                  border-radius: 8px !important;
+                  padding: 8px 0 8px 16px !important;
+                  margin-top: 4px !important;
+                  position: static !important;
+                  float: none !important;
+                  box-shadow: none !important;
+                }
+                .main-menu-wrap .dropdown-menu .nav-link {
+                  font-size: 13.5px !important;
+                  padding: 10px 0 !important;
+                  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+                }
+                .main-menu-wrap .others-options {
+                  display: none !important;
+                }
+              }
+            `}</style>
           </nav>
         </div>
       </div>
