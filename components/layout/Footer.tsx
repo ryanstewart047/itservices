@@ -2,36 +2,55 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import SubscriptionSuccessModal from './SubscriptionSuccessModal';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
   const [subscribing, setSubscribing] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [subscribedEmail, setSubscribedEmail] = useState('');
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !email.includes('@')) {
+    setMessage(null);
+
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (!cleanEmail || !cleanEmail.includes('@') || !cleanEmail.includes('.')) {
       setMessage({ text: 'Please enter a valid email address.', type: 'error' });
       return;
     }
 
+    const dotCount = (cleanEmail.match(/\./g) || []).length;
+    if (dotCount > 2) {
+      setMessage({ text: 'Invalid email: emails with more than two dots are not accepted.', type: 'error' });
+      return;
+    }
+
     setSubscribing(true);
-    setMessage(null);
 
     try {
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: cleanEmail, source: 'Footer Form' }),
       });
       const data = await res.json();
-      if (res.ok) {
-        setMessage({ text: data.response || 'Thank you for subscribing!', type: 'success' });
+      if (res.ok && data.success) {
+        setSubscribedEmail(cleanEmail);
         setEmail('');
+        setShowSuccessModal(true);
       } else {
-        setMessage({ text: data.response || 'Subscription failed. Please try again.', type: 'error' });
+        if (data.error === 'DUPLICATE_EMAIL') {
+          setMessage({ text: 'This email is already subscribed to EARPI. Thank you for your support!', type: 'error' });
+        } else if (data.error === 'INVALID_EMAIL_DOTS') {
+          setMessage({ text: 'Invalid email: emails with more than two dots are not accepted.', type: 'error' });
+        } else {
+          setMessage({ text: data.response || 'Subscription failed. Please try again.', type: 'error' });
+        }
       }
-    } catch (err) {
+    } catch {
       setMessage({ text: 'Network error. Please try again later.', type: 'error' });
     } finally {
       setSubscribing(false);
@@ -201,6 +220,12 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
+      <SubscriptionSuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        email={subscribedEmail}
+      />
     </footer>
   );
 }

@@ -34,25 +34,65 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    if (!email || !email.includes('@')) {
+    const cleanEmail = (email || '').trim().toLowerCase();
+
+    // 1. Basic format validation
+    if (!cleanEmail || !cleanEmail.includes('@') || !cleanEmail.includes('.')) {
       return NextResponse.json(
-        { success: false, response: 'Please enter a valid email address.' },
+        { success: false, error: 'INVALID_EMAIL', response: 'Please enter a valid email address.' },
         { status: 400 }
       );
     }
 
-    // 1. Save to Database
-    const savedSubscriber = await addSubscriber(email, name, source);
+    // 2. Strict rule: Any email that has more than two dots is flagged as invalid
+    const dotCount = (cleanEmail.match(/\./g) || []).length;
+    if (dotCount > 2) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'INVALID_EMAIL_DOTS',
+          response: 'Invalid email address: emails containing more than two dots are not accepted.',
+        },
+        { status: 400 }
+      );
+    }
 
-    // 2. Send automated Gmail confirmation & admin alert
-    const mailResult = await handleNewSubscriber(email, name);
+    // 3. Save to Database (handles duplicate rejection)
+    try {
+      const savedSubscriber = await addSubscriber(cleanEmail, name, source);
 
-    return NextResponse.json({
-      success: true,
-      response: 'Subscription successful! Thank you for joining EARPI. A confirmation email has been sent.',
-      subscriber: savedSubscriber,
-      mailResult,
-    });
+      // 4. Send automated Gmail confirmation & admin alert
+      const mailResult = await handleNewSubscriber(cleanEmail, name);
+
+      return NextResponse.json({
+        success: true,
+        response: 'Subscription successful! Welcome to the EARPI Climate Movement.',
+        subscriber: savedSubscriber,
+        mailResult,
+      });
+    } catch (dbErr: any) {
+      if (dbErr.message === 'DUPLICATE_EMAIL') {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'DUPLICATE_EMAIL',
+            response: 'This email is already subscribed to EARPI updates. Thank you for your ongoing support!',
+          },
+          { status: 409 }
+        );
+      }
+      if (dbErr.message === 'INVALID_EMAIL_DOTS') {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'INVALID_EMAIL_DOTS',
+            response: 'Invalid email address: emails containing more than two dots are not accepted.',
+          },
+          { status: 400 }
+        );
+      }
+      throw dbErr;
+    }
   } catch (error: any) {
     console.error('Subscription API error:', error);
     return NextResponse.json(

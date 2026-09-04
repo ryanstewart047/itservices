@@ -675,8 +675,67 @@ export async function getSubscribers(): Promise<Subscriber[]> {
   );
 }
 
+export async function checkSubscriberExists(email: string): Promise<boolean> {
+  const cleanEmail = email.trim().toLowerCase();
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      const rows = await sql`SELECT id FROM subscribers WHERE email = ${cleanEmail} LIMIT 1`;
+      return rows.length > 0;
+    } catch (e) {
+      console.error('Error checking subscriber in Neon:', e);
+    }
+  }
+  const db = readLocalDB();
+  return Boolean(db.subscribers?.some((s) => s.email.toLowerCase() === cleanEmail));
+}
+
 export async function addSubscriber(email: string, name?: string, source?: string): Promise<Subscriber> {
   const cleanEmail = email.trim().toLowerCase();
+
+  // Validate: Flag any email that has more than two dots as invalid
+  const dotCount = (cleanEmail.match(/\./g) || []).length;
+  if (dotCount > 2) {
+    throw new Error('INVALID_EMAIL_DOTS');
+  }
+
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      // Check for duplicate in Neon
+      const existing = await sql`SELECT id, email, name, status, source, created_at FROM subscribers WHERE email = ${cleanEmail} LIMIT 1`;
+      if (existing.length > 0) {
+        throw new Error('DUPLICATE_EMAIL');
+      }
+
+      const newSub: Subscriber = {
+        id: `sub-${Date.now()}`,
+        email: cleanEmail,
+        name: name?.trim(),
+        status: 'active',
+        source: source || 'Website',
+        createdAt: new Date().toISOString(),
+      };
+
+      await sql`
+        INSERT INTO subscribers (id, email, name, status, source, created_at)
+        VALUES (${newSub.id}, ${newSub.email}, ${newSub.name || null}, ${newSub.status}, ${newSub.source || null}, ${newSub.createdAt})
+      `;
+      return newSub;
+    } catch (e: any) {
+      if (e.message === 'DUPLICATE_EMAIL' || e.message === 'INVALID_EMAIL_DOTS') {
+        throw e;
+      }
+      console.error('Failed to add subscriber to Neon:', e);
+    }
+  }
+
+  const db = readLocalDB();
+  const existing = db.subscribers?.find((s) => s.email.toLowerCase() === cleanEmail);
+  if (existing) {
+    throw new Error('DUPLICATE_EMAIL');
+  }
+
   const newSub: Subscriber = {
     id: `sub-${Date.now()}`,
     email: cleanEmail,
@@ -686,23 +745,6 @@ export async function addSubscriber(email: string, name?: string, source?: strin
     createdAt: new Date().toISOString(),
   };
 
-  const sql = await getPgClient();
-  if (sql) {
-    try {
-      await sql`
-        INSERT INTO subscribers (id, email, name, status, source, created_at)
-        VALUES (${newSub.id}, ${newSub.email}, ${newSub.name || null}, ${newSub.status}, ${newSub.source || null}, ${newSub.createdAt})
-        ON CONFLICT (email) DO NOTHING
-      `;
-      return newSub;
-    } catch (e) {
-      console.error('Failed to add subscriber to Neon:', e);
-    }
-  }
-
-  const db = readLocalDB();
-  const existing = db.subscribers?.find((s) => s.email.toLowerCase() === cleanEmail);
-  if (existing) return existing;
   db.subscribers = [newSub, ...(db.subscribers || [])];
   writeLocalDB(db);
   return newSub;
