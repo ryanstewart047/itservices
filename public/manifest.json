@@ -1,0 +1,60 @@
+{
+  "name": "EARPI - Earth Regenerative Project International",
+  "short_name": "EARPI",
+  "description": "Earth Regenerative Project International - Building climate resilience, youth empowerment, and regenerative ecosystems in Sierra Leone and globally.",
+  "start_url": "/",
+  "id": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#338F7A",
+  "categories": ["non-profit", "environment", "sustainability"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/img/favicon.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "About Us",
+      "url": "/about",
+      "description": "Learn about EARPI's mission and team"
+    },
+    {
+      "name": "Donate",
+      "url": "/donation",
+      "description": "Support our regenerative climate projects"
+    },
+    {
+      "name": "Projects",
+      "url": "/projects",
+      "description": "Explore our initiatives and impact"
+    },
+    {
+      "name": "Contact",
+      "url": "/contact",
+      "description": "Get in touch with EARPI"
+    }
+  ]
+}
