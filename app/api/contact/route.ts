@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { handleContactForm } from '@/lib/mail';
+import { addContactMessage } from '@/lib/db';
 
 export async function POST(req: NextRequest) {
   try {
@@ -50,6 +51,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // 1. Save to Database
+    const savedInquiry = await addContactMessage({
+      name,
+      email,
+      phone,
+      subject: subject || 'General Inquiry',
+      message,
+    });
+
+    // 2. Send email notifications
     const mailResult = await handleContactForm({
       name,
       email,
@@ -61,6 +72,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       status: 'success',
       message: 'Thank you! Your message has been sent successfully. We will get back to you shortly.',
+      inquiry: savedInquiry,
       mailResult,
     });
   } catch (error: any) {
