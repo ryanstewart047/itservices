@@ -18,10 +18,27 @@ interface Donation {
   createdAt: string;
 }
 
-const EMPTY_FORM = { donorName: '', donorEmail: '', amount: '', currency: 'USD', frequency: 'one-time', projectName: '', paymentMethod: 'Manual Entry', status: 'completed', notes: '' };
+interface Project {
+  id: string;
+  title: string;
+}
+
+const EMPTY_FORM = {
+  donorName: '',
+  donorEmail: '',
+  amount: '',
+  currency: 'USD',
+  frequency: 'one-time',
+  projectId: '',
+  projectName: '',
+  paymentMethod: 'Physical Cash (Sierra Leone Field Office)',
+  status: 'completed',
+  notes: '',
+};
 
 export default function AdminDonationsPage() {
   const [donations, setDonations] = useState<Donation[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
@@ -31,16 +48,35 @@ export default function AdminDonationsPage() {
 
   useEffect(() => {
     async function load() {
-      const res = await fetch('/api/admin/donations');
-      if (res.status === 401) { router.push('/admin/login'); return; }
-      const data = await res.json();
-      setDonations(data.donations || []);
+      const [donRes, projRes] = await Promise.all([
+        fetch('/api/admin/donations'),
+        fetch('/api/projects'),
+      ]);
+      if (donRes.status === 401) { router.push('/admin/login'); return; }
+      const donData = await donRes.json();
+      setDonations(donData.donations || []);
+      if (projRes.ok) {
+        const projData = await projRes.json();
+        setProjects(projData.projects || []);
+      }
       setLoading(false);
     }
     load();
   }, [router]);
 
-  const totalRaised = donations.filter((d) => d.status === 'completed').reduce((acc, d) => acc + Number(d.amount), 0);
+  const totalRaised = donations
+    .filter((d) => d.status === 'completed')
+    .reduce((acc, d) => acc + Number(d.amount), 0);
+
+  const handleProjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = e.target.value;
+    const selectedProject = projects.find((p) => p.id === selectedId);
+    setForm((f) => ({
+      ...f,
+      projectId: selectedId,
+      projectName: selectedProject ? selectedProject.title : '',
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +87,12 @@ export default function AdminDonationsPage() {
       const res = await fetch('/api/admin/donations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, amount: Number(form.amount) }),
+        body: JSON.stringify({
+          ...form,
+          amount: Number(form.amount),
+          projectId: form.projectId || undefined,
+          projectName: form.projectName || undefined,
+        }),
       });
       const data = await res.json();
       if (data.success) {
@@ -64,12 +105,22 @@ export default function AdminDonationsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Remove this donation record?')) return;
+    if (!confirm('Remove this donation record? This will also reverse the project funding counter.')) return;
     const res = await fetch(`/api/admin/donations?id=${id}`, { method: 'DELETE' });
     if (res.ok) setDonations((prev) => prev.filter((d) => d.id !== id));
   };
 
-  const inputStyle = { width: '100%', padding: '10px 12px', backgroundColor: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', color: '#fff', fontSize: '13.5px', outline: 'none', boxSizing: 'border-box' as const };
+  const inputStyle = {
+    width: '100%',
+    padding: '10px 12px',
+    backgroundColor: 'rgba(0,0,0,0.25)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    borderRadius: '8px',
+    color: '#fff',
+    fontSize: '13.5px',
+    outline: 'none',
+    boxSizing: 'border-box' as const,
+  };
 
   return (
     <div>
@@ -121,23 +172,37 @@ export default function AdminDonationsPage() {
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#a7b8b2', marginBottom: '5px', textTransform: 'uppercase' }}>Project (Optional)</label>
-                <input type="text" value={form.projectName} onChange={(e) => setForm((f) => ({ ...f, projectName: e.target.value }))} placeholder="e.g. Coastal Mangrove Restoration" style={inputStyle} />
+                <select value={form.projectId} onChange={handleProjectChange} style={inputStyle}>
+                  <option value="">— General Fund —</option>
+                  {projects.map((p) => (
+                    <option key={p.id} value={p.id}>{p.title}</option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#a7b8b2', marginBottom: '5px', textTransform: 'uppercase' }}>Payment Method</label>
                 <select value={form.paymentMethod} onChange={(e) => setForm((f) => ({ ...f, paymentMethod: e.target.value }))} style={inputStyle}>
-                  <option value="Manual Entry">Manual Entry</option>
-                  <option value="Bank Wire">Bank Wire</option>
-                  <option value="Credit Card">Credit Card</option>
-                  <option value="PayPal">PayPal</option>
+                  <option value="Physical Cash (Sierra Leone Field Office)">Physical Cash (Sierra Leone Field Office)</option>
+                  <option value="Cheque">Cheque</option>
+                  <option value="Bank Wire / Direct Transfer">Bank Wire / Direct Transfer</option>
+                  <option value="Institutional Grant">Institutional Grant</option>
                   <option value="Mobile Money">Mobile Money</option>
-                  <option value="Grant">Grant</option>
+                  <option value="Stripe (Online Card)">Stripe (Online Card)</option>
+                  <option value="PayPal">PayPal</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#a7b8b2', marginBottom: '5px', textTransform: 'uppercase' }}>Status</label>
+                <select value={form.status} onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))} style={inputStyle}>
+                  <option value="completed">Completed</option>
+                  <option value="pending">Pending</option>
                 </select>
               </div>
             </div>
             <div style={{ marginBottom: '16px' }}>
               <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#a7b8b2', marginBottom: '5px', textTransform: 'uppercase' }}>Notes (Optional)</label>
-              <textarea value={form.notes} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} placeholder="Any special notes about this donation..." rows={2} style={{ ...inputStyle, resize: 'vertical' }} />
+              <textarea value={form.notes} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} placeholder="Any special notes about this donation (receipt number, event, etc.)..." rows={2} style={{ ...inputStyle, resize: 'vertical' }} />
             </div>
             <button type="submit" disabled={saving} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '11px 22px', backgroundColor: '#10b981', color: '#06281e', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer' }}>
               {saving ? <Loader2 size={16} className="animate-spin" /> : <DollarSign size={16} />}

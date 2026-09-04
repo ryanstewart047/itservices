@@ -86,7 +86,7 @@ const INITIAL_PROJECTS: Project[] = [
     location: 'Yawri Bay & Sherbro Island, Sierra Leone',
     status: 'Active',
     fundingGoal: 45000,
-    fundingRaised: 31200,
+    fundingRaised: 0,
     treesTarget: 50000,
     treesPlanted: 34850,
     carbonOffsetTons: 640,
@@ -120,7 +120,7 @@ const INITIAL_PROJECTS: Project[] = [
     location: 'Port Loko District, Sierra Leone',
     status: 'Active',
     fundingGoal: 32000,
-    fundingRaised: 22400,
+    fundingRaised: 0,
     treesTarget: 25000,
     treesPlanted: 16800,
     carbonOffsetTons: 320,
@@ -154,7 +154,7 @@ const INITIAL_PROJECTS: Project[] = [
     location: 'Kambia & Bo Districts, Sierra Leone',
     status: 'Active',
     fundingGoal: 28000,
-    fundingRaised: 24500,
+    fundingRaised: 0,
     treesTarget: 5000,
     treesPlanted: 5000,
     carbonOffsetTons: 190,
@@ -187,7 +187,7 @@ const INITIAL_PROJECTS: Project[] = [
     location: 'Freetown & Western Area Rural, Sierra Leone',
     status: 'Active',
     fundingGoal: 18000,
-    fundingRaised: 14800,
+    fundingRaised: 0,
     treesTarget: 10000,
     treesPlanted: 7600,
     carbonOffsetTons: 110,
@@ -220,7 +220,7 @@ const INITIAL_PROJECTS: Project[] = [
     location: 'Bullom Shore & Aberdeen Creek, Sierra Leone',
     status: 'Upcoming',
     fundingGoal: 35000,
-    fundingRaised: 16500,
+    fundingRaised: 0,
     treesTarget: 2000,
     treesPlanted: 1200,
     carbonOffsetTons: 85,
@@ -263,47 +263,7 @@ const INITIAL_SUBSCRIBERS: Subscriber[] = [
   },
 ];
 
-const INITIAL_DONATIONS: Donation[] = [
-  {
-    id: 'don-1',
-    donorName: 'Global Regenerative Fund',
-    donorEmail: 'grants@regenfond.org',
-    amount: 15000,
-    currency: 'USD',
-    frequency: 'one-time',
-    projectName: 'Coastal Mangrove Ecosystem Restoration',
-    paymentMethod: 'Bank Wire',
-    status: 'completed',
-    notes: 'Restoration grant for Yawri Bay nursery equipment',
-    createdAt: '2026-08-10T16:00:00.000Z',
-  },
-  {
-    id: 'don-2',
-    donorName: 'David & Clara Miller',
-    donorEmail: 'miller.climate@gmail.com',
-    amount: 1200,
-    currency: 'USD',
-    frequency: 'monthly',
-    projectName: 'Community Agroforestry & Food Forests',
-    paymentMethod: 'Credit Card',
-    status: 'completed',
-    notes: 'Monthly community sponsor pledge',
-    createdAt: '2026-08-22T10:30:00.000Z',
-  },
-  {
-    id: 'don-3',
-    donorName: 'Anonymous Climate Angel',
-    donorEmail: 'supporter@eco-action.net',
-    amount: 5000,
-    currency: 'USD',
-    frequency: 'one-time',
-    projectName: 'Solar Clean Tech & Eco-Stoves',
-    paymentMethod: 'PayPal',
-    status: 'completed',
-    notes: 'Dedicated to women cookstove manufacturing in Bo District',
-    createdAt: '2026-09-01T15:20:00.000Z',
-  },
-];
+const INITIAL_DONATIONS: Donation[] = [];
 
 const INITIAL_MESSAGES: ContactMessage[] = [
   {
@@ -818,8 +778,16 @@ export async function addDonation(data: Omit<Donation, 'id' | 'createdAt'>): Pro
         INSERT INTO donations (id, donor_name, donor_email, amount, currency, frequency, project_id, project_name, payment_method, status, notes, created_at)
         VALUES (${newDonation.id}, ${newDonation.donorName}, ${newDonation.donorEmail}, ${newDonation.amount}, ${newDonation.currency}, ${newDonation.frequency}, ${newDonation.projectId || null}, ${newDonation.projectName || null}, ${newDonation.paymentMethod}, ${newDonation.status}, ${newDonation.notes || null}, ${newDonation.createdAt})
       `;
-      if (data.projectId) {
-        await sql`UPDATE projects SET funding_raised = funding_raised + ${Number(data.amount)} WHERE id = ${data.projectId} OR slug = ${data.projectId}`;
+      const targetProjRef = data.projectId || data.projectName;
+      if (targetProjRef && targetProjRef !== 'General Ecological Fund (Highest Need)' && targetProjRef !== 'General Fund') {
+        await sql`
+          UPDATE projects 
+          SET funding_raised = funding_raised + ${Number(data.amount)},
+              updated_at = ${new Date().toISOString()}
+          WHERE id = ${targetProjRef} 
+             OR slug = ${targetProjRef} 
+             OR title ILIKE ${'%' + targetProjRef + '%'}
+        `;
       }
       return newDonation;
     } catch (e) {
@@ -829,8 +797,16 @@ export async function addDonation(data: Omit<Donation, 'id' | 'createdAt'>): Pro
 
   const db = readLocalDB();
   db.donations = [newDonation, ...(db.donations || [])];
-  if (data.projectId) {
-    const project = db.projects?.find((p) => p.id === data.projectId);
+  
+  const targetProjRef = data.projectId || data.projectName;
+  if (targetProjRef && targetProjRef !== 'General Ecological Fund (Highest Need)' && targetProjRef !== 'General Fund') {
+    const project = db.projects?.find(
+      (p) =>
+        p.id === targetProjRef ||
+        p.slug === targetProjRef ||
+        p.title.toLowerCase().includes(targetProjRef.toLowerCase()) ||
+        targetProjRef.toLowerCase().includes(p.title.toLowerCase())
+    );
     if (project) {
       project.fundingRaised = (project.fundingRaised || 0) + Number(data.amount);
       project.updatedAt = new Date().toISOString();
@@ -844,6 +820,19 @@ export async function deleteDonation(id: string): Promise<boolean> {
   const sql = await getPgClient();
   if (sql) {
     try {
+      const existing = await sql`SELECT * FROM donations WHERE id = ${id} LIMIT 1`;
+      if (existing.length > 0) {
+        const d = existing[0];
+        const targetRef = d.project_id || d.project_name;
+        if (targetRef) {
+          await sql`
+            UPDATE projects 
+            SET funding_raised = GREATEST(0, funding_raised - ${Number(d.amount)}),
+                updated_at = ${new Date().toISOString()}
+            WHERE id = ${targetRef} OR slug = ${targetRef} OR title ILIKE ${'%' + targetRef + '%'}
+          `;
+        }
+      }
       await sql`DELETE FROM donations WHERE id = ${id}`;
       return true;
     } catch (e) {
@@ -852,6 +841,23 @@ export async function deleteDonation(id: string): Promise<boolean> {
   }
 
   const db = readLocalDB();
+  const foundDonation = (db.donations || []).find((d) => d.id === id);
+  if (foundDonation) {
+    const targetRef = foundDonation.projectId || foundDonation.projectName;
+    if (targetRef) {
+      const project = db.projects?.find(
+        (p) =>
+          p.id === targetRef ||
+          p.slug === targetRef ||
+          p.title.toLowerCase().includes(targetRef.toLowerCase())
+      );
+      if (project) {
+        project.fundingRaised = Math.max(0, (project.fundingRaised || 0) - Number(foundDonation.amount));
+        project.updatedAt = new Date().toISOString();
+      }
+    }
+  }
+
   const initialLen = db.donations?.length || 0;
   db.donations = (db.donations || []).filter((d) => d.id !== id);
   if (db.donations.length !== initialLen) {

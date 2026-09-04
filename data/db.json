@@ -10,7 +10,7 @@
       "location": "Yawri Bay & Sherbro Island, Sierra Leone",
       "status": "Active",
       "fundingGoal": 45000,
-      "fundingRaised": 31200,
+      "fundingRaised": 0,
       "treesTarget": 50000,
       "treesPlanted": 34850,
       "carbonOffsetTons": 640,
@@ -30,7 +30,7 @@
       ],
       "featured": true,
       "createdAt": "2026-01-10T10:00:00.000Z",
-      "updatedAt": "2026-08-20T14:30:00.000Z"
+      "updatedAt": "2026-09-04T15:19:50.854Z"
     },
     {
       "id": "proj-2",
@@ -42,7 +42,7 @@
       "location": "Port Loko District, Sierra Leone",
       "status": "Active",
       "fundingGoal": 32000,
-      "fundingRaised": 22400,
+      "fundingRaised": 0,
       "treesTarget": 25000,
       "treesPlanted": 16800,
       "carbonOffsetTons": 320,
@@ -62,7 +62,7 @@
       ],
       "featured": true,
       "createdAt": "2026-02-05T09:00:00.000Z",
-      "updatedAt": "2026-08-18T11:20:00.000Z"
+      "updatedAt": "2026-09-04T15:19:50.859Z"
     },
     {
       "id": "proj-3",
@@ -74,7 +74,7 @@
       "location": "Kambia & Bo Districts, Sierra Leone",
       "status": "Active",
       "fundingGoal": 28000,
-      "fundingRaised": 24500,
+      "fundingRaised": 0,
       "treesTarget": 5000,
       "treesPlanted": 5000,
       "carbonOffsetTons": 190,
@@ -93,7 +93,7 @@
       ],
       "featured": true,
       "createdAt": "2026-03-12T11:00:00.000Z",
-      "updatedAt": "2026-08-15T09:15:00.000Z"
+      "updatedAt": "2026-09-04T15:19:50.859Z"
     },
     {
       "id": "proj-4",
@@ -105,7 +105,7 @@
       "location": "Freetown & Western Area Rural, Sierra Leone",
       "status": "Active",
       "fundingGoal": 18000,
-      "fundingRaised": 14800,
+      "fundingRaised": 0,
       "treesTarget": 10000,
       "treesPlanted": 7600,
       "carbonOffsetTons": 110,
@@ -124,7 +124,7 @@
       ],
       "featured": false,
       "createdAt": "2026-04-01T08:00:00.000Z",
-      "updatedAt": "2026-08-10T16:45:00.000Z"
+      "updatedAt": "2026-09-04T15:19:50.859Z"
     },
     {
       "id": "proj-5",
@@ -136,7 +136,7 @@
       "location": "Bullom Shore & Aberdeen Creek, Sierra Leone",
       "status": "Upcoming",
       "fundingGoal": 35000,
-      "fundingRaised": 16500,
+      "fundingRaised": 0,
       "treesTarget": 2000,
       "treesPlanted": 1200,
       "carbonOffsetTons": 85,
@@ -148,7 +148,7 @@
       "documents": [],
       "featured": false,
       "createdAt": "2026-05-15T12:00:00.000Z",
-      "updatedAt": "2026-08-01T10:00:00.000Z"
+      "updatedAt": "2026-09-04T15:19:50.859Z"
     }
   ],
   "subscribers": [
@@ -185,47 +185,7 @@
       "createdAt": "2026-09-02T11:15:00.000Z"
     }
   ],
-  "donations": [
-    {
-      "id": "don-1",
-      "donorName": "Global Regenerative Fund",
-      "donorEmail": "grants@regenfond.org",
-      "amount": 15000,
-      "currency": "USD",
-      "frequency": "one-time",
-      "projectName": "Coastal Mangrove Ecosystem Restoration",
-      "paymentMethod": "Bank Wire",
-      "status": "completed",
-      "notes": "Restoration grant for Yawri Bay nursery equipment",
-      "createdAt": "2026-08-10T16:00:00.000Z"
-    },
-    {
-      "id": "don-2",
-      "donorName": "David & Clara Miller",
-      "donorEmail": "miller.climate@gmail.com",
-      "amount": 1200,
-      "currency": "USD",
-      "frequency": "monthly",
-      "projectName": "Community Agroforestry & Food Forests",
-      "paymentMethod": "Credit Card",
-      "status": "completed",
-      "notes": "Monthly community sponsor pledge",
-      "createdAt": "2026-08-22T10:30:00.000Z"
-    },
-    {
-      "id": "don-3",
-      "donorName": "Anonymous Climate Angel",
-      "donorEmail": "supporter@eco-action.net",
-      "amount": 5000,
-      "currency": "USD",
-      "frequency": "one-time",
-      "projectName": "Solar Clean Tech & Eco-Stoves",
-      "paymentMethod": "PayPal",
-      "status": "completed",
-      "notes": "Dedicated to women cookstove manufacturing in Bo District",
-      "createdAt": "2026-09-01T15:20:00.000Z"
-    }
-  ],
+  "donations": [],
   "messages": [
     {
       "id": "msg-1",

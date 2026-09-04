@@ -343,10 +343,10 @@ export default async function HomePage() {
               }}
             >
               <DollarSign size={28} />
-              <span>${kpis.totalDonations ? kpis.totalDonations.toLocaleString() : '84,000'}+</span>
+              <span>${kpis.totalDonations > 0 ? kpis.totalDonations.toLocaleString() : '0'}</span>
             </div>
             <div style={{ fontSize: '13px', color: '#8aa69b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              Transparent Grants Deployed
+              Live Verified Funds Raised
             </div>
           </div>
         </div>
