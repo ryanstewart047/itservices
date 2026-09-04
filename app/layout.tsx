@@ -7,6 +7,7 @@ import NewsletterPopup from '@/components/layout/NewsletterPopup';
 import AIChatBot from '@/components/ai/AIChatBot';
 import PWAInstallPrompt from '@/components/pwa/PWAInstallPrompt';
 import ServiceWorkerRegister from '@/components/pwa/ServiceWorkerRegister';
+import GlobalFormHandler from '@/components/forms/GlobalFormHandler';
 
 export const metadata: Metadata = {
   title: {
@@ -99,6 +100,7 @@ export default function RootLayout({
         <AIChatBot />
         <NewsletterPopup />
         <PWAInstallPrompt />
+        <GlobalFormHandler />
       </body>
     </html>
   );

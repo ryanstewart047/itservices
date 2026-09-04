@@ -19,14 +19,25 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
     setResult(null);
+
+    const cleanEmail = formData.email.trim().toLowerCase();
+    const dotCount = (cleanEmail.match(/\./g) || []).length;
+    if (dotCount > 2) {
+      setResult({
+        text: 'Invalid email: emails containing more than two dots are not accepted.',
+        success: false,
+      });
+      return;
+    }
+
+    setSubmitting(true);
 
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, email: cleanEmail }),
       });
       const data = await res.json();
       if (res.ok && data.status === 'success') {
