@@ -1,13 +1,6 @@
 import type { Metadata, Viewport } from 'next';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import ThemeSwitcher from '@/components/layout/ThemeSwitcher';
-import BackToTop from '@/components/layout/BackToTop';
-import NewsletterPopup from '@/components/layout/NewsletterPopup';
-import AIChatBot from '@/components/ai/AIChatBot';
-import PWAInstallPrompt from '@/components/pwa/PWAInstallPrompt';
+import SiteShell from '@/components/layout/SiteShell';
 import ServiceWorkerRegister from '@/components/pwa/ServiceWorkerRegister';
-import GlobalFormHandler from '@/components/forms/GlobalFormHandler';
 
 export const metadata: Metadata = {
   title: {
@@ -88,19 +81,7 @@ export default function RootLayout({
       </head>
       <body>
         <ServiceWorkerRegister />
-        <ThemeSwitcher />
-
-        <div className="page-wrapper">
-          <Header />
-          <main className="content-wrapper">{children}</main>
-          <Footer />
-        </div>
-
-        <BackToTop />
-        <AIChatBot />
-        <NewsletterPopup />
-        <PWAInstallPrompt />
-        <GlobalFormHandler />
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   );

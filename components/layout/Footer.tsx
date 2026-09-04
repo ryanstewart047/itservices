@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ShieldCheck, AlertCircle, Loader2, ArrowRight } from 'lucide-react';
+import { ShieldCheck, AlertCircle, Loader2, ArrowRight, Lock } from 'lucide-react';
 import SubscriptionSuccessModal from './SubscriptionSuccessModal';
 
 const BG = '#061a14';
@@ -214,9 +214,31 @@ export default function Footer() {
                   {l.label}
                 </Link>
               ))}
-              <span style={{ color: BORDER }}>|</span>
-              <Link href="/admin" style={{ color: ACCENT, fontSize: 12, fontWeight: 600, textDecoration: 'none' }}>
-                Admin Portal
+              <Link
+                href="/admin"
+                aria-label="Staff Access"
+                title=""
+                style={{
+                  color: 'rgba(255, 255, 255, 0.16)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textDecoration: 'none',
+                  opacity: 0.28,
+                  padding: '4px',
+                  transition: 'opacity 0.2s ease, color 0.2s ease',
+                  marginLeft: '2px',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLAnchorElement).style.opacity = '0.7';
+                  (e.currentTarget as HTMLAnchorElement).style.color = '#8aa69b';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLAnchorElement).style.opacity = '0.28';
+                  (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(255, 255, 255, 0.16)';
+                }}
+              >
+                <Lock size={10} strokeWidth={2} />
               </Link>
             </div>
           </div>
