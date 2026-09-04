@@ -153,6 +153,14 @@
   ],
   "subscribers": [
     {
+      "id": "sub-1788515895284",
+      "email": "alpha.sesay@gmail.com",
+      "name": "Alpha Sesay",
+      "status": "active",
+      "source": "Website",
+      "createdAt": "2026-09-04T09:58:15.284Z"
+    },
+    {
       "id": "sub-1",
       "email": "climate.supporter@globalgreen.org",
       "name": "Eleanor Vance",
