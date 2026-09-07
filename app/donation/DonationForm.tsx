@@ -670,7 +670,7 @@ export default function DonationForm() {
             }}
           >
             <ShieldCheck size={14} color="#10b981" />
-            <span>USA 501(c)(3) • EIN: 99-0979318 • Tax Deductible</span>
+            <span>USA Non-profit Corporation MA 001751059 • EIN: 99-0979318 • Tax Deductible</span>
           </div>
         </form>
       </div>
@@ -775,7 +775,7 @@ export default function DonationForm() {
           }}
         >
           <ShieldCheck size={14} color="#10b981" />
-          <span>USA 501(c)(3) • EIN: 99-0979318 • Tax Deductible</span>
+          <span>USA Non-profit Corporation MA 001751059 • EIN: 99-0979318 • Tax Deductible</span>
         </div>
       </div>
     </div>

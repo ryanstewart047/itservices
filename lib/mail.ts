@@ -425,3 +425,55 @@ export async function handleEventRegistration(data: {
     html: adminHtml,
   });
 }
+
+/**
+ * Send branded newsletter email to a single subscriber
+ */
+export async function sendNewsletterBroadcast(options: {
+  subject: string;
+  title: string;
+  bodyHtml: string;
+  imageUrl?: string;
+  ctaText?: string;
+  ctaUrl?: string;
+  recipientEmail: string;
+  recipientName?: string;
+}): Promise<EmailResult> {
+  let content = `
+    <h2 style="color:#ffffff;font-size:22px;margin:0 0 16px;line-height:1.3;">${options.title}</h2>
+  `;
+
+  if (options.imageUrl) {
+    content += `
+      <div style="margin:0 0 20px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.15);">
+        <img src="${options.imageUrl}" alt="${options.title}" style="width:100%;max-width:100%;height:auto;display:block;" />
+      </div>
+    `;
+  }
+
+  content += `
+    <div style="color:#e6f4ee;font-size:14.5px;line-height:1.75;margin:0 0 24px;">
+      ${options.bodyHtml}
+    </div>
+  `;
+
+  if (options.ctaText && options.ctaUrl) {
+    content += `
+      <div style="text-align:center;margin:28px 0 16px;">
+        <a href="${options.ctaUrl}" target="_blank" style="display:inline-block;padding:13px 30px;background-color:#10b981;color:#06281e;font-size:14.5px;font-weight:bold;text-decoration:none;border-radius:8px;box-shadow:0 4px 15px rgba(16,185,129,0.35);">
+          ${options.ctaText}
+        </a>
+      </div>
+    `;
+  }
+
+  const html = wrapBrandedEmail(options.subject, content);
+
+  return sendEmail({
+    to: options.recipientEmail,
+    subject: options.subject,
+    html,
+  });
+}
+
+export { sendEmail, wrapBrandedEmail };

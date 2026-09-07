@@ -12,6 +12,8 @@ import {
   ExternalLink,
   LogOut,
   Leaf,
+  Send,
+  Activity,
 } from 'lucide-react';
 
 export default function AdminSidebar() {
@@ -31,8 +33,10 @@ export default function AdminSidebar() {
   const navItems = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, exact: true },
     { name: 'Projects & Tracker', href: '/admin/projects', icon: FolderKanban, exact: true },
+    { name: 'Field Tracking', href: '/admin/field-tracking', icon: Activity, exact: true },
     { name: 'Post New Project', href: '/admin/projects/new', icon: PlusCircle, exact: true },
     { name: 'Subscribers', href: '/admin/subscribers', icon: Users, exact: true },
+    { name: 'Send Newsletter', href: '/admin/newsletter', icon: Send, exact: true },
     { name: 'Donations & Ledger', href: '/admin/donations', icon: HeartHandshake, exact: true },
     { name: 'Inquiries & Inbox', href: '/admin/messages', icon: Mail, exact: true },
   ];

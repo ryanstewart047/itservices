@@ -70,13 +70,34 @@ export default function AdminSubscribersPage() {
             {subscribers.length} total subscribers. Manage and export your mailing list.
           </p>
         </div>
-        <button
-          onClick={exportCSV}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px', backgroundColor: '#0c261e', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: '8px', color: '#10b981', cursor: 'pointer', fontSize: '13.5px', fontWeight: 600 }}
-        >
-          <Download size={16} />
-          Export CSV
-        </button>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <Link
+            href="/admin/newsletter"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 18px',
+              backgroundColor: '#10b981',
+              borderRadius: '8px',
+              color: '#06281e',
+              fontSize: '13.5px',
+              fontWeight: 700,
+              textDecoration: 'none',
+              boxShadow: '0 4px 14px rgba(16,185,129,0.3)',
+            }}
+          >
+            <Mail size={16} />
+            Compose Newsletter
+          </Link>
+          <button
+            onClick={exportCSV}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px', backgroundColor: '#0c261e', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: '8px', color: '#10b981', cursor: 'pointer', fontSize: '13.5px', fontWeight: 600 }}
+          >
+            <Download size={16} />
+            Export CSV
+          </button>
+        </div>
       </div>
 
       {/* Search */}

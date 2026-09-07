@@ -75,15 +75,17 @@ export default function HeroSlider() {
 
   return (
     <section
+      className="hero-slider-section"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       style={{
         position: 'relative',
-        minHeight: '92vh',
+        minHeight: 'clamp(560px, 86vh, 800px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
+        backgroundColor: '#051812',
       }}
     >
       {/* Background images — all preloaded, transition with opacity */}
@@ -96,73 +98,82 @@ export default function HeroSlider() {
             inset: 0,
             backgroundImage: `url(${s.image})`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundPosition: 'center 40%',
             backgroundRepeat: 'no-repeat',
             opacity: i === current ? 1 : 0,
-            transition: 'opacity 0.9s cubic-bezier(0.4,0,0.2,1)',
-            willChange: 'opacity',
+            transform: i === current ? 'scale(1)' : 'scale(1.03)',
+            transition: 'opacity 0.9s cubic-bezier(0.4,0,0.2,1), transform 6s linear',
+            willChange: 'opacity, transform',
             zIndex: 0,
           }}
         />
       ))}
 
-      {/* Dark gradient overlay */}
+      {/* Subtle cinematic gradient overlay to ensure text readability while keeping photos vivid and clear */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(180deg, rgba(7,27,21,0.72) 0%, rgba(7,27,21,0.88) 55%, rgba(7,27,21,0.97) 100%)',
+          background:
+            'radial-gradient(ellipse at center, rgba(5, 20, 15, 0.2) 0%, rgba(5, 20, 15, 0.5) 65%, rgba(4, 16, 12, 0.82) 100%), linear-gradient(180deg, rgba(4, 16, 12, 0.35) 0%, transparent 40%, rgba(4, 16, 12, 0.85) 100%)',
           zIndex: 1,
+          pointerEvents: 'none',
         }}
       />
 
       {/* Slide content */}
       <div
+        className="hero-slide-content"
         style={{
           position: 'relative',
           zIndex: 2,
           maxWidth: '960px',
+          width: '100%',
           margin: '0 auto',
-          padding: '110px 24px 90px',
+          padding: 'clamp(50px, 8vw, 100px) clamp(16px, 4vw, 32px) clamp(70px, 10vw, 90px)',
           textAlign: 'center',
           opacity: animating ? 0 : 1,
-          transform: animating ? 'translateY(14px)' : 'translateY(0)',
-          transition: 'opacity 0.5s ease, transform 0.5s ease',
+          transform: animating ? 'translateY(12px)' : 'translateY(0)',
+          transition: 'opacity 0.45s ease, transform 0.45s ease',
         }}
       >
         {/* Accreditation Tag & Slide Category Pill */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '22px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '6px 16px',
-              backgroundColor: 'rgba(16, 185, 129, 0.18)',
-              border: '1px solid rgba(16, 185, 129, 0.4)',
+              padding: '6px 14px',
+              backgroundColor: 'rgba(6, 26, 19, 0.72)',
+              border: '1px solid rgba(16, 185, 129, 0.45)',
               borderRadius: '30px',
-              fontSize: '12.5px',
+              fontSize: '12px',
               fontWeight: 600,
               color: '#34d399',
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 4px 14px rgba(0,0,0,0.3)',
             }}
           >
-            <ShieldCheck size={15} />
-            <span>USA 501(c)(3) Non-Profit • Freetown, Sierra Leone</span>
+            <ShieldCheck size={14} />
+            <span>USA Non-Profit MA 001751059 • EIN: 99-0979318</span>
           </div>
 
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '8px',
-              padding: '6px 16px',
-              backgroundColor: `${slide.tagColor}22`,
-              border: `1px solid ${slide.tagColor}66`,
+              gap: '7px',
+              padding: '6px 14px',
+              backgroundColor: 'rgba(6, 26, 19, 0.72)',
+              border: `1px solid ${slide.tagColor}88`,
               borderRadius: '30px',
-              fontSize: '12.5px',
+              fontSize: '12px',
               fontWeight: 700,
               color: slide.tagColor,
               letterSpacing: '0.3px',
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 4px 14px rgba(0,0,0,0.3)',
             }}
           >
             <span
@@ -182,12 +193,13 @@ export default function HeroSlider() {
         {/* Headline */}
         <h1
           style={{
-            fontSize: 'clamp(32px, 5.5vw, 60px)',
+            fontSize: 'clamp(28px, 5.2vw, 56px)',
             fontWeight: 900,
             color: '#ffffff',
             margin: '0 0 16px',
-            lineHeight: 1.12,
-            letterSpacing: '-0.8px',
+            lineHeight: 1.14,
+            letterSpacing: '-0.5px',
+            textShadow: '0 3px 16px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0,0,0,0.9)',
           }}
         >
           {slide.headline}{' '}
@@ -196,6 +208,8 @@ export default function HeroSlider() {
               background: 'linear-gradient(90deg, #10b981 0%, #34d399 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
+              textShadow: 'none',
+              filter: 'drop-shadow(0 2px 10px rgba(0,0,0,0.8))',
             }}
           >
             {slide.headlineGradient}
@@ -205,11 +219,12 @@ export default function HeroSlider() {
         {/* Body text */}
         <p
           style={{
-            fontSize: 'clamp(15px, 2vw, 18.5px)',
-            color: '#c6d8d0',
-            lineHeight: 1.7,
+            fontSize: 'clamp(14px, 1.8vw, 18px)',
+            color: '#f0fdf4',
+            lineHeight: 1.65,
             maxWidth: '740px',
-            margin: '0 auto 36px',
+            margin: '0 auto 32px',
+            textShadow: '0 2px 10px rgba(0, 0, 0, 0.85), 0 1px 2px rgba(0,0,0,0.95)',
           }}
         >
           {slide.body}
@@ -217,11 +232,12 @@ export default function HeroSlider() {
 
         {/* CTA buttons */}
         <div
+          className="hero-cta-group"
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '14px',
+            gap: '12px',
             flexWrap: 'wrap',
           }}
         >
@@ -230,38 +246,43 @@ export default function HeroSlider() {
             style={{
               display: 'inline-flex',
               alignItems: 'center',
+              justifyContent: 'center',
               gap: '8px',
-              padding: '14px 28px',
+              padding: '13px 26px',
               backgroundColor: '#10b981',
               color: '#06281e',
               borderRadius: '12px',
               fontWeight: 800,
-              fontSize: '15px',
+              fontSize: '14.5px',
               textDecoration: 'none',
-              boxShadow: '0 8px 24px rgba(16,185,129,0.35)',
+              boxShadow: '0 6px 20px rgba(16,185,129,0.4)',
+              minWidth: '180px',
             }}
           >
             <span>{slide.cta.label}</span>
-            <ArrowRight size={17} />
+            <ArrowRight size={16} />
           </Link>
           <Link
             href="/donation"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
+              justifyContent: 'center',
               gap: '8px',
-              padding: '14px 26px',
-              backgroundColor: 'rgba(255,255,255,0.08)',
-              border: '1.5px solid rgba(255,255,255,0.24)',
+              padding: '13px 24px',
+              backgroundColor: 'rgba(6, 26, 19, 0.72)',
+              border: '1.5px solid rgba(255,255,255,0.3)',
               color: '#ffffff',
               borderRadius: '12px',
               fontWeight: 700,
-              fontSize: '15px',
+              fontSize: '14.5px',
               textDecoration: 'none',
               backdropFilter: 'blur(8px)',
+              boxShadow: '0 6px 20px rgba(0,0,0,0.35)',
+              minWidth: '160px',
             }}
           >
-            <Heart size={16} color="#f43f5e" />
+            <Heart size={15} color="#f43f5e" />
             <span>Donate Now</span>
           </Link>
         </div>
@@ -273,51 +294,52 @@ export default function HeroSlider() {
           key={dir}
           onClick={dir === 'prev' ? prev : next}
           aria-label={dir === 'prev' ? 'Previous slide' : 'Next slide'}
+          className={`hero-arrow-btn hero-arrow-${dir}`}
           style={{
             position: 'absolute',
             top: '50%',
-            [dir === 'prev' ? 'left' : 'right']: '20px',
+            [dir === 'prev' ? 'left' : 'right']: '16px',
             transform: 'translateY(-50%)',
             zIndex: 3,
-            background: 'rgba(0,0,0,0.35)',
-            border: '1px solid rgba(255,255,255,0.18)',
+            background: 'rgba(6, 26, 19, 0.65)',
+            border: '1px solid rgba(255,255,255,0.22)',
             borderRadius: '50%',
-            width: '46px',
-            height: '46px',
+            width: '44px',
+            height: '44px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
             color: '#fff',
-            backdropFilter: 'blur(6px)',
-            transition: 'background 0.2s',
+            backdropFilter: 'blur(8px)',
+            transition: 'background 0.2s, transform 0.15s ease',
           }}
         >
           {dir === 'prev' ? <ChevronLeft size={22} /> : <ChevronRight size={22} />}
         </button>
       ))}
 
-      {/* Dot indicators + progress bar */}
+      {/* Dot indicators + progress bar (slide counter 01/04 removed) */}
       <div
         style={{
           position: 'absolute',
-          bottom: '28px',
+          bottom: '22px',
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 3,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '12px',
+          gap: '10px',
         }}
       >
         {/* Progress bar for current slide */}
         <div
           style={{
-            width: '140px',
-            height: '2px',
+            width: '120px',
+            height: '3px',
             backgroundColor: 'rgba(255,255,255,0.2)',
-            borderRadius: '2px',
+            borderRadius: '3px',
             overflow: 'hidden',
           }}
         >
@@ -326,37 +348,32 @@ export default function HeroSlider() {
             style={{
               height: '100%',
               backgroundColor: '#10b981',
-              borderRadius: '2px',
+              borderRadius: '3px',
               animation: paused ? 'none' : `slider-progress ${AUTO_INTERVAL}ms linear forwards`,
             }}
           />
         </div>
 
         {/* Dots */}
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '8px' }}>
           {SLIDES.map((_, i) => (
             <button
               key={i}
               onClick={() => goTo(i)}
               aria-label={`Go to slide ${i + 1}`}
               style={{
-                width: i === current ? '28px' : '8px',
+                width: i === current ? '26px' : '8px',
                 height: '8px',
                 borderRadius: '4px',
                 border: 'none',
                 cursor: 'pointer',
-                backgroundColor: i === current ? '#10b981' : 'rgba(255,255,255,0.35)',
+                backgroundColor: i === current ? '#10b981' : 'rgba(255,255,255,0.4)',
                 transition: 'all 0.35s ease',
                 padding: 0,
               }}
             />
           ))}
         </div>
-
-        {/* Slide counter */}
-        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.45)', letterSpacing: '1px' }}>
-          {String(current + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
-        </span>
       </div>
 
       <style>{`
@@ -367,6 +384,22 @@ export default function HeroSlider() {
         @keyframes pulse-dot {
           0%, 100% { opacity: 1; transform: scale(1); }
           50%       { opacity: 0.5; transform: scale(0.75); }
+        }
+        @media (max-width: 640px) {
+          .hero-arrow-btn {
+            width: 36px !important;
+            height: 36px !important;
+            background: rgba(6, 26, 19, 0.8) !important;
+          }
+          .hero-arrow-prev { left: 8px !important; }
+          .hero-arrow-next { right: 8px !important; }
+          .hero-cta-group {
+            flex-direction: column !important;
+            width: 100% !important;
+          }
+          .hero-cta-group a {
+            width: 100% !important;
+          }
         }
       `}</style>
     </section>

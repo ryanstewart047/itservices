@@ -109,7 +109,7 @@ export default function Footer() {
             {/* Accreditation badge */}
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 6, padding: '5px 10px', marginBottom: 20 }}>
               <ShieldCheck size={13} color={ACCENT} />
-              <span style={{ color: ACCENT, fontSize: 11, fontWeight: 700, letterSpacing: '0.03em' }}>USA 501(c)(3) · EIN 99-0979318</span>
+              <span style={{ color: ACCENT, fontSize: 11, fontWeight: 700, letterSpacing: '0.03em' }}>USA Non-profit Corporation Registration MA 001751059; EIN: 99-0979318</span>
             </div>
 
             {/* Socials */}

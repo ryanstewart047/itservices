@@ -49,26 +49,45 @@ export default function Header() {
 
   return (
     <header className={`header-wrap ${isSticky ? 'sticky' : ''}`}>
+      {/* Smooth Non-Stop Horizontal Registration Marquee Ticker */}
+      <div
+        className="header-marquee-ticker"
+        style={{
+          backgroundColor: '#041d15',
+          borderBottom: '1px solid rgba(16, 185, 129, 0.28)',
+          padding: '6px 0',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          fontSize: '12.5px',
+          fontWeight: 700,
+          letterSpacing: '0.4px',
+          display: 'flex',
+          position: 'relative',
+          zIndex: 1000,
+        }}
+      >
+        <div className="marquee-content-track">
+          {[...Array(6)].map((_, i) => (
+            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '14px', paddingRight: '48px' }}>
+              <span style={{ color: '#10b981', fontSize: '13px' }}>⚖️</span>
+              <span style={{ color: '#ffffff', letterSpacing: '0.3px' }}>
+                USA Non-profit Corporation Registration MA 001751059; EIN: 99-0979318
+              </span>
+              <span style={{ color: 'rgba(255,255,255,0.3)' }}>•</span>
+              <span style={{ color: '#34d399' }}>501(c)(3) Tax-Exempt Status</span>
+              <span style={{ color: 'rgba(255,255,255,0.3)' }}>•</span>
+              <span style={{ color: '#a7f3d0' }}>Freetown, Sierra Leone</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
       {/* Header Top Bar */}
       <div className="header-top">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-8 col-md-8">
               <div className="header-top-left">
-                <div
-                  style={{
-                    backgroundColor: '#338F7A',
-                    color: '#fff',
-                    padding: '4px 12px',
-                    borderRadius: '4px',
-                    fontSize: '13px',
-                    fontWeight: 'bold',
-                    marginBottom: '6px',
-                    display: 'inline-block',
-                  }}
-                >
-                  USA 501(c)(3) Non-Profit • EIN: 99-0979318
-                </div>
                 <ul className="contact-info list-style">
                   <li>
                     <i className="flaticon-phone-call"></i>
@@ -477,6 +496,25 @@ export default function Header() {
                 .main-menu-wrap .others-options {
                   display: none !important;
                 }
+              }
+
+              /* Continuous Horizontal Registration Marquee */
+              @keyframes marqueeContinuous {
+                0% {
+                  transform: translateX(0);
+                }
+                100% {
+                  transform: translateX(-50%);
+                }
+              }
+              .marquee-content-track {
+                display: flex;
+                white-space: nowrap;
+                animation: marqueeContinuous 25s linear infinite;
+                will-change: transform;
+              }
+              .header-marquee-ticker:hover .marquee-content-track {
+                animation-play-state: paused;
               }
             `}</style>
           </nav>
