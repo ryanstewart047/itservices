@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await req.json();
-    const { subject, title, bodyHtml, imageUrl, ctaText, ctaUrl, isTest, testEmail } = data;
+    const { subject, title, bodyHtml, imageUrl, ctaText, ctaUrl, isTest, testEmail, selectedEmails } = data;
 
     if (!subject?.trim() || !title?.trim() || !bodyHtml?.trim()) {
       return NextResponse.json(
@@ -60,13 +60,18 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // 2. Broadcast to all active subscribers
+    // 2. Broadcast to targeted/selected subscribers
     const allSubscribers = await getSubscribers();
-    const activeSubscribers = allSubscribers.filter((s) => s.status === 'active' || !s.status);
+    let targetSubscribers = allSubscribers.filter((s) => s.status === 'active' || !s.status);
 
-    if (activeSubscribers.length === 0) {
+    if (Array.isArray(selectedEmails) && selectedEmails.length > 0) {
+      const selectedSet = new Set(selectedEmails.map((e: string) => e.toLowerCase().trim()));
+      targetSubscribers = targetSubscribers.filter((s) => selectedSet.has(s.email.toLowerCase().trim()));
+    }
+
+    if (targetSubscribers.length === 0) {
       return NextResponse.json(
-        { error: 'No active subscribers found in the database.' },
+        { error: 'No recipients selected or found in active subscribers.' },
         { status: 400 }
       );
     }
@@ -76,7 +81,7 @@ export async function POST(req: NextRequest) {
     const errors: string[] = [];
 
     // Send in batches to avoid overwhelming SMTP
-    for (const sub of activeSubscribers) {
+    for (const sub of targetSubscribers) {
       try {
         const res = await sendNewsletterBroadcast({
           subject,
@@ -105,7 +110,7 @@ export async function POST(req: NextRequest) {
       success: true,
       sentCount,
       failCount,
-      totalTargeted: activeSubscribers.length,
+      totalTargeted: targetSubscribers.length,
       errors: errors.slice(0, 5),
     });
   } catch (err: any) {
