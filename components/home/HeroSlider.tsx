@@ -156,7 +156,7 @@ export default function HeroSlider() {
             }}
           >
             <ShieldCheck size={14} />
-            <span>USA Non-Profit MA 001751059 • EIN: 99-0979318</span>
+            <span>USA Non-profit Corporation Registration MA 001751059; EIN: 99-0979318</span>
           </div>
 
           <div

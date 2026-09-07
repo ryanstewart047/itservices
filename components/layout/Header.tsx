@@ -67,16 +67,12 @@ export default function Header() {
         }}
       >
         <div className="marquee-content-track">
-          {[...Array(6)].map((_, i) => (
-            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '14px', paddingRight: '48px' }}>
-              <span style={{ color: '#10b981', fontSize: '13px' }}>⚖️</span>
-              <span style={{ color: '#ffffff', letterSpacing: '0.3px' }}>
+          {[...Array(10)].map((_, i) => (
+            <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: '28px', paddingRight: '28px' }}>
+              <span style={{ color: '#ffffff', letterSpacing: '0.4px' }}>
                 USA Non-profit Corporation Registration MA 001751059; EIN: 99-0979318
               </span>
-              <span style={{ color: 'rgba(255,255,255,0.3)' }}>•</span>
-              <span style={{ color: '#34d399' }}>501(c)(3) Tax-Exempt Status</span>
-              <span style={{ color: 'rgba(255,255,255,0.3)' }}>•</span>
-              <span style={{ color: '#a7f3d0' }}>Freetown, Sierra Leone</span>
+              <span style={{ color: '#10b981', opacity: 0.6 }}>•</span>
             </span>
           ))}
         </div>
