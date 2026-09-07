@@ -92,12 +92,36 @@ export default function Footer() {
   return (
     <>
       <footer style={{ background: BG, color: '#fff', borderTop: `1px solid ${BORDER}`, fontFamily: 'inherit' }}>
+        <style>{`
+          .footer-grid-layout {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 40px 20px 32px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 36px;
+          }
+          @media (min-width: 640px) {
+            .footer-grid-layout {
+              grid-template-columns: repeat(2, 1fr);
+              padding: 48px 24px 36px;
+              gap: 36px;
+            }
+          }
+          @media (min-width: 1024px) {
+            .footer-grid-layout {
+              grid-template-columns: 1.5fr 1fr 1fr 1.3fr;
+              padding: 60px 28px 48px;
+              gap: 40px;
+            }
+          }
+        `}</style>
 
         {/* ── Main grid ── */}
-        <div style={{ maxWidth: 1240, margin: '0 auto', padding: '60px 28px 48px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '40px' }}>
+        <div className="footer-grid-layout">
 
           {/* Col 1 — Brand */}
-          <div style={{ gridColumn: '1 / 2' }}>
+          <div>
             <Link href="/" style={{ display: 'inline-block', marginBottom: 20 }}>
               <img src="/assets/img/logo-white.png" alt="EARPI" style={{ height: 48, objectFit: 'contain' }} />
             </Link>

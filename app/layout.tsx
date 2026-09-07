@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import SiteShell from '@/components/layout/SiteShell';
 import ServiceWorkerRegister from '@/components/pwa/ServiceWorkerRegister';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: {

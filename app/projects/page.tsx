@@ -142,7 +142,7 @@ export default function ProjectsPage() {
           ) : projects.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px', color: '#8aa69b' }}>No projects found for this filter.</div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '28px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))', gap: '24px' }}>
               {projects.map((proj) => {
                 const fundingPct = proj.fundingGoal > 0 ? Math.min(100, Math.round((proj.fundingRaised / proj.fundingGoal) * 100)) : 0;
                 const statusColor = STATUS_COLORS[proj.status] || STATUS_COLORS.Active;

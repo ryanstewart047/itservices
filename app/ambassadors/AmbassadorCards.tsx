@@ -38,7 +38,7 @@ export default function AmbassadorCards() {
       </div>
 
       {/* Ambassador Grid */}
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '3.5rem 1.5rem 5rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '3rem 1.25rem 5rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1.5rem' }}>
         {ambassadors.map((amb) => (
           <div
             key={amb.name}
