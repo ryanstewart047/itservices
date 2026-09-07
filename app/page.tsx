@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { getProjects, getSystemKPIs } from '@/lib/db';
 import HomeNewsletterForm from '@/components/home/HomeNewsletterForm';
+import HeroSlider from '@/components/home/HeroSlider';
 
 export const metadata: Metadata = {
   title: 'EARPI | Earth Regenerative Projects International - Climate Action & Mangrove Reforestation',
@@ -93,158 +94,15 @@ export default async function HomePage() {
   return (
     <main style={{ backgroundColor: '#071b15', color: '#f3f4f6', overflowX: 'hidden' }}>
       {/* ========================================================================= */}
-      {/* 1. HERO SECTION */}
+      {/* 1. HERO SLIDER (Auto-advancing with 4 impact slides & unique messages) */}
       {/* ========================================================================= */}
-      <section
-        style={{
-          position: 'relative',
-          minHeight: '85vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '100px 20px 80px',
-          backgroundImage:
-            'linear-gradient(180deg, rgba(7, 27, 21, 0.82) 0%, rgba(7, 27, 21, 0.95) 100%), url(/assets/img/hero/hero-1.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          textAlign: 'center',
-        }}
-      >
-        <div style={{ maxWidth: '920px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
-          {/* Accreditation Tag */}
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '6px 18px',
-              backgroundColor: 'rgba(16, 185, 129, 0.18)',
-              border: '1px solid rgba(16, 185, 129, 0.4)',
-              borderRadius: '30px',
-              fontSize: '13px',
-              fontWeight: 600,
-              color: '#34d399',
-              marginBottom: '24px',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-            }}
-          >
-            <ShieldCheck size={16} />
-            <span>USA 501(c)(3) Non-Profit • Freetown, Sierra Leone</span>
-          </div>
-
-          {/* Main Title */}
-          <h1
-            style={{
-              fontSize: 'clamp(32px, 5.5vw, 58px)',
-              fontWeight: 900,
-              color: '#ffffff',
-              margin: '0 0 20px',
-              lineHeight: 1.15,
-              letterSpacing: '-0.8px',
-            }}
-          >
-            Restoring Coastal Ecosystems.{' '}
-            <span
-              style={{
-                background: 'linear-gradient(90deg, #10b981 0%, #34d399 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              Regenerating Communities.
-            </span>
-          </h1>
-
-          {/* Subtitle */}
-          <p
-            style={{
-              fontSize: 'clamp(16px, 2.2vw, 20px)',
-              color: '#c6d8d0',
-              lineHeight: 1.65,
-              maxWidth: '780px',
-              margin: '0 auto 36px',
-            }}
-          >
-            Earth Regenerative Projects International leads community-driven blue carbon mangrove
-            restoration, syntropic agroforestry, and grassroots youth eco-literacy across Sierra Leone’s
-            most vulnerable climate frontlines.
-          </p>
-
-          {/* Call to Action Buttons */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '14px',
-              flexWrap: 'wrap',
-            }}
-          >
-            <Link
-              href="/projects"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '15px 30px',
-                backgroundColor: '#10b981',
-                color: '#06281e',
-                borderRadius: '12px',
-                fontWeight: 800,
-                fontSize: '15px',
-                textDecoration: 'none',
-                boxShadow: '0 8px 24px rgba(16, 185, 129, 0.35)',
-                transition: 'transform 0.15s ease',
-              }}
-            >
-              <span>Explore Field Projects</span>
-              <ArrowRight size={18} />
-            </Link>
-
-            <Link
-              href="/donation"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '15px 28px',
-                backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                border: '1.5px solid rgba(255, 255, 255, 0.25)',
-                color: '#ffffff',
-                borderRadius: '12px',
-                fontWeight: 700,
-                fontSize: '15px',
-                textDecoration: 'none',
-                backdropFilter: 'blur(8px)',
-              }}
-            >
-              <Heart size={17} color="#f43f5e" />
-              <span>Make a Direct Donation</span>
-            </Link>
-
-            <a
-              href="#tracker"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '15px 22px',
-                color: '#a7f3d0',
-                fontSize: '14px',
-                textDecoration: 'underline',
-              }}
-            >
-              <span>Track Live Milestones ↓</span>
-            </a>
-          </div>
-        </div>
-      </section>
+      <HeroSlider />
 
       {/* ========================================================================= */}
       {/* 2. LIVE IMPACT METRICS BAR */}
       {/* ========================================================================= */}
       <section
+        id="tracker"
         style={{
           backgroundColor: '#0a231b',
           borderTop: '1px solid rgba(16, 185, 129, 0.25)',
