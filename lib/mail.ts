@@ -1,9 +1,33 @@
 import nodemailer from 'nodemailer';
+import fs from 'fs';
+import path from 'path';
+import { getUpload } from './db';
 
 export interface EmailResult {
   success: boolean;
   messageId?: string;
   error?: string;
+}
+
+// Strip HTML tags to produce a clean plain-text alternative (crucial for anti-spam scoring)
+function stripHtml(html: string): string {
+  return html
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<br\s*[\/]?>/gi, '\n')
+    .replace(/<\/p>/gi, '\n\n')
+    .replace(/<h[1-6][^>]*>(.*?)<\/h[1-6]>/gi, '\n\n$1\n')
+    .replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/gi, '$2 ($1)')
+    .replace(/<li[^>]*>(.*?)<\/li>/gi, '• $1\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&bull;/g, '•')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\n\s*\n\s*\n/g, '\n\n')
+    .trim();
 }
 
 // Reusable Transporter resolution (Gmail, Custom SMTP, or Resend fallback)
@@ -40,7 +64,7 @@ function getTransporter() {
 function getFromAddress(): string {
   if (process.env.SMTP_FROM) return process.env.SMTP_FROM;
   if (process.env.GMAIL_USER) return `"EARPI" <${process.env.GMAIL_USER}>`;
-  return '"EARPI - Earth Regenerative Projects" <official@earpi.org>';
+  return '"EARPI" <official@earpi.org>';
 }
 
 function getAdminEmail(): string {
@@ -48,15 +72,28 @@ function getAdminEmail(): string {
 }
 
 /**
- * Send email using Nodemailer, or Resend API fallback, or graceful logging
+ * Send email using Nodemailer, or Resend API fallback, with full anti-spam headers & plain-text MIME alternative
  */
 async function sendEmail(options: {
   to: string;
   subject: string;
   html: string;
+  text?: string;
   replyTo?: string;
+  attachments?: any[];
+  headers?: Record<string, string>;
 }): Promise<EmailResult> {
   const from = getFromAddress();
+  const plainText = options.text || stripHtml(options.html);
+
+  // Industry-standard anti-spam deliverability headers (enforced by Google & Yahoo)
+  const antiSpamHeaders: Record<string, string> = {
+    'List-Unsubscribe': `<mailto:official@earpi.org?subject=Unsubscribe%20${encodeURIComponent(options.to)}>, <https://earpi.org/contact>`,
+    'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+    'Precedence': 'bulk',
+    'X-Auto-Response-Suppress': 'OOF, AutoReply',
+    ...options.headers,
+  };
 
   // 1. Try Nodemailer (SMTP or Gmail)
   const transporter = getTransporter();
@@ -67,7 +104,10 @@ async function sendEmail(options: {
         to: options.to,
         subject: options.subject,
         html: options.html,
-        replyTo: options.replyTo,
+        text: plainText,
+        replyTo: options.replyTo || 'official@earpi.org',
+        headers: antiSpamHeaders,
+        attachments: options.attachments,
       });
       return { success: true, messageId: info.messageId };
     } catch (err: any) {
@@ -90,7 +130,10 @@ async function sendEmail(options: {
           to: [options.to],
           subject: options.subject,
           html: options.html,
-          reply_to: options.replyTo,
+          text: plainText,
+          reply_to: options.replyTo || 'official@earpi.org',
+          headers: antiSpamHeaders,
+          attachments: options.attachments,
         }),
       });
       const data = await res.json();
@@ -109,47 +152,120 @@ async function sendEmail(options: {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Branded Email Wrapper
+// Branded Email Wrapper (Anti-Spam & Mobile-Optimized)
 // ─────────────────────────────────────────────────────────────────────────────
-function wrapBrandedEmail(title: string, contentHtml: string): string {
+function wrapBrandedEmail(title: string, contentHtml: string, recipientEmail?: string): string {
+  const unsubUrl = recipientEmail
+    ? `https://earpi.org/contact?action=unsubscribe&email=${encodeURIComponent(recipientEmail)}`
+    : 'https://earpi.org/contact?action=unsubscribe';
+
   return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="format-detection" content="telephone=no,address=no,email=no,date=no,url=no">
   <title>${title}</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style type="text/css">
+    body, table, td, p, a, li, blockquote {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    table, td {
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+    img {
+      -ms-interpolation-mode: bicubic;
+      border: 0;
+      outline: none;
+      text-decoration: none;
+      height: auto;
+      max-width: 100%;
+    }
+    @media only screen and (max-width: 600px) {
+      .email-shell {
+        padding: 8px 4px !important;
+      }
+      .email-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 8px !important;
+      }
+      .email-header-cell {
+        padding: 20px 16px !important;
+      }
+      .email-body-cell {
+        padding: 20px 16px !important;
+      }
+      .email-footer-cell {
+        padding: 18px 14px !important;
+      }
+      .responsive-image {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+      }
+      .btn-cta {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 14px 16px !important;
+        text-align: center !important;
+      }
+    }
+  </style>
 </head>
-<body style="margin:0;padding:0;background-color:#061a14;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#061a14;padding:30px 15px;">
+<body style="margin:0;padding:0;background-color:#061a14;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" class="email-shell" style="background-color:#061a14;padding:24px 12px;margin:0 auto;">
     <tr>
       <td align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;background-color:#0c261e;border:1px solid rgba(52,199,89,0.25);border-radius:14px;overflow:hidden;box-shadow:0 12px 35px rgba(0,0,0,0.5);">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" class="email-container" style="max-width:580px;background-color:#0c261e;border:1px solid rgba(52,199,89,0.25);border-radius:14px;overflow:hidden;box-shadow:0 12px 35px rgba(0,0,0,0.5);">
           
           <!-- Header -->
           <tr>
-            <td style="background:linear-gradient(135deg, #061a14 0%, #0c2e22 100%);padding:28px 30px;border-bottom:1px solid rgba(52,199,89,0.18);text-align:center;">
+            <td class="email-header-cell" style="background:linear-gradient(135deg, #061a14 0%, #0c2e22 100%);padding:26px 24px;border-bottom:1px solid rgba(52,199,89,0.18);text-align:center;">
               <h1 style="margin:0;color:#ffffff;font-size:24px;font-weight:800;letter-spacing:1px;">EARPI</h1>
-              <p style="margin:4px 0 0;color:#34d399;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Earth Regenerative Projects International</p>
+              <p style="margin:4px 0 0;color:#34d399;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Earth Regenerative Projects International</p>
             </td>
           </tr>
 
           <!-- Body -->
           <tr>
-            <td style="padding:32px 30px;color:#e6f4ee;font-size:14px;line-height:1.65;">
+            <td class="email-body-cell" style="padding:28px 24px;color:#e6f4ee;font-size:14.5px;line-height:1.7;">
               ${contentHtml}
             </td>
           </tr>
 
-          <!-- Footer -->
+          <!-- Footer (Complies with CAN-SPAM and Anti-Spam Guidelines) -->
           <tr>
-            <td style="background-color:#051410;padding:24px 30px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;color:#7b958c;font-size:11.5px;line-height:1.6;">
-              <p style="margin:0 0 6px;color:#a7b8b2;font-weight:600;">USA 501(c)(3) MA 001751059 • EIN: 99-0979318</p>
-              <p style="margin:0 0 10px;">Headquarters: 32 Wallace Johnson St, Freetown, Sierra Leone</p>
-              <p style="margin:0;">
+            <td class="email-footer-cell" style="background-color:#051410;padding:22px 24px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;color:#7b958c;font-size:11.5px;line-height:1.6;">
+              <p style="margin:0 0 4px;color:#a7b8b2;font-weight:700;">
+                USA Non-profit Corporation Registration MA 001751059; EIN: 99-0979318
+              </p>
+              <p style="margin:0 0 8px;">
+                Headquarters: 32 Wallace Johnson St, Freetown, Sierra Leone
+              </p>
+              <p style="margin:0 0 12px;">
                 <a href="https://earpi.org" style="color:#34d399;text-decoration:none;font-weight:600;">Website</a> &bull; 
                 <a href="https://earpi.org/projects" style="color:#34d399;text-decoration:none;font-weight:600;">Projects</a> &bull; 
                 <a href="https://earpi.org/donation" style="color:#34d399;text-decoration:none;font-weight:600;">Donate</a>
+              </p>
+              <p style="margin:0;font-size:11px;color:#557467;line-height:1.5;border-top:1px solid rgba(255,255,255,0.05);padding-top:10px;">
+                You are receiving this official field dispatch because you subscribed to updates at earpi.org.<br/>
+                To manage your preferences or unsubscribe, <a href="${unsubUrl}" style="color:#34d399;text-decoration:underline;">click here to unsubscribe</a>.
               </p>
             </td>
           </tr>
@@ -427,7 +543,7 @@ export async function handleEventRegistration(data: {
 }
 
 /**
- * Send branded newsletter email to a single subscriber
+ * Send branded newsletter email to a single subscriber with mobile-responsive inline CID images
  */
 export async function sendNewsletterBroadcast(options: {
   subject: string;
@@ -439,47 +555,185 @@ export async function sendNewsletterBroadcast(options: {
   recipientEmail: string;
   recipientName?: string;
 }): Promise<EmailResult> {
+  const attachments: Array<{
+    filename: string;
+    content: Buffer;
+    cid: string;
+    contentType?: string;
+    contentDisposition?: string;
+  }> = [];
+
+  let imageSrc: string | null = null;
+
+  if (options.imageUrl && options.imageUrl.trim()) {
+    const rawUrl = options.imageUrl.trim();
+    try {
+      // 1. Base64 Data URL
+      if (rawUrl.startsWith('data:')) {
+        const match = rawUrl.match(/^data:([^;]+);base64,(.+)$/);
+        if (match) {
+          const mimeType = match[1];
+          const base64Data = match[2];
+          const ext = mimeType.split('/')[1] || 'jpg';
+          const buffer = Buffer.from(base64Data, 'base64');
+          const cid = 'newsletter-featured-image';
+          attachments.push({
+            filename: `newsletter-banner.${ext}`,
+            content: buffer,
+            cid,
+            contentType: mimeType,
+            contentDisposition: 'inline',
+          });
+          imageSrc = `cid:${cid}`;
+        }
+      }
+      // 2. Database upload via /api/media/[id]
+      else if (rawUrl.startsWith('/api/media/')) {
+        const parts = rawUrl.replace(/^\/api\/media\//, '').split('/');
+        const id = parts[0];
+        const dbUpload = await getUpload(id);
+        if (dbUpload && dbUpload.buffer) {
+          const cid = 'newsletter-featured-image';
+          attachments.push({
+            filename: dbUpload.filename || 'newsletter-banner.jpg',
+            content: dbUpload.buffer,
+            cid,
+            contentType: dbUpload.mimeType || 'image/jpeg',
+            contentDisposition: 'inline',
+          });
+          imageSrc = `cid:${cid}`;
+        }
+      }
+      // 3. Local filesystem file in /public/uploads
+      else if (rawUrl.startsWith('/') && !rawUrl.startsWith('//')) {
+        const cleanPath = rawUrl.replace(/^\//, '');
+        const localPath = path.join(process.cwd(), 'public', cleanPath);
+        if (fs.existsSync(localPath)) {
+          const buffer = fs.readFileSync(localPath);
+          const ext = path.extname(localPath).toLowerCase();
+          let mime = 'image/jpeg';
+          if (ext === '.png') mime = 'image/png';
+          else if (ext === '.webp') mime = 'image/webp';
+          else if (ext === '.gif') mime = 'image/gif';
+          else if (ext === '.svg') mime = 'image/svg+xml';
+          const cid = 'newsletter-featured-image';
+          attachments.push({
+            filename: path.basename(localPath),
+            content: buffer,
+            cid,
+            contentType: mime,
+            contentDisposition: 'inline',
+          });
+          imageSrc = `cid:${cid}`;
+        }
+      }
+      // 4. Remote HTTP/HTTPS URL
+      else if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://')) {
+        try {
+          const fetchRes = await fetch(rawUrl, { signal: AbortSignal.timeout(6000) });
+          if (fetchRes.ok) {
+            const arrayBuf = await fetchRes.arrayBuffer();
+            const buffer = Buffer.from(arrayBuf);
+            const contentType = fetchRes.headers.get('content-type') || 'image/jpeg';
+            const ext = contentType.split('/')[1]?.split(';')[0] || 'jpg';
+            const cid = 'newsletter-featured-image';
+            attachments.push({
+              filename: `newsletter-banner.${ext}`,
+              content: buffer,
+              cid,
+              contentType,
+              contentDisposition: 'inline',
+            });
+            imageSrc = `cid:${cid}`;
+          }
+        } catch {
+          // Fallback to remote URL directly if fetch timed out
+          imageSrc = rawUrl;
+        }
+      }
+
+      // Fallback if none of the above converted to CID
+      if (!imageSrc) {
+        imageSrc = rawUrl.startsWith('http')
+          ? rawUrl
+          : `https://earpi.org${rawUrl.startsWith('/') ? '' : '/'}${rawUrl}`;
+      }
+    } catch (imgErr) {
+      console.warn('[Mail Image Handler Warning]:', imgErr);
+      imageSrc = rawUrl.startsWith('http')
+        ? rawUrl
+        : `https://earpi.org${rawUrl.startsWith('/') ? '' : '/'}${rawUrl}`;
+    }
+  }
+
+  // Scan bodyHtml for any embedded inline data URIs and extract them as attachments to prevent Gmail clipping
+  let processedBodyHtml = options.bodyHtml;
+  let bodyImgCount = 0;
+  processedBodyHtml = processedBodyHtml.replace(
+    /<img([^>]+)src=["']data:([^;]+);base64,([^"']+)["']([^>]*)>/gi,
+    (_match, before, mime, b64, after) => {
+      bodyImgCount++;
+      const cid = `newsletter-inline-img-${bodyImgCount}`;
+      const ext = mime.split('/')[1] || 'jpg';
+      try {
+        attachments.push({
+          filename: `inline-image-${bodyImgCount}.${ext}`,
+          content: Buffer.from(b64, 'base64'),
+          cid,
+          contentType: mime,
+          contentDisposition: 'inline',
+        });
+        return `<img${before}src="cid:${cid}"${after}>`;
+      } catch {
+        return _match;
+      }
+    }
+  );
+
   let content = `
-    <h2 style="color:#ffffff;font-size:22px;margin:0 0 16px;line-height:1.3;">${options.title}</h2>
+    <h2 style="color:#ffffff;font-size:22px;margin:0 0 16px;line-height:1.35;font-weight:700;">${options.title}</h2>
   `;
 
-  if (options.imageUrl) {
-    const absoluteImgUrl =
-      options.imageUrl.startsWith('http://') ||
-      options.imageUrl.startsWith('https://') ||
-      options.imageUrl.startsWith('data:')
-        ? options.imageUrl
-        : `https://earpi.org${options.imageUrl.startsWith('/') ? '' : '/'}${options.imageUrl}`;
-
+  if (imageSrc) {
+    const safeTitle = options.title.replace(/"/g, '&quot;');
     content += `
-      <div style="margin:0 0 20px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.15);">
-        <img src="${absoluteImgUrl}" alt="${options.title}" style="width:100%;max-width:100%;height:auto;display:block;" />
-      </div>
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:0 0 24px 0;">
+        <tr>
+          <td align="center" style="padding:0;">
+            <img src="${imageSrc}" alt="${safeTitle}" width="532" class="responsive-image" style="width:100%;max-width:532px;height:auto;display:block;margin:0 auto;border-radius:10px;border:1px solid rgba(255,255,255,0.12);" />
+          </td>
+        </tr>
+      </table>
     `;
   }
 
   content += `
     <div style="color:#e6f4ee;font-size:14.5px;line-height:1.75;margin:0 0 24px;">
-      ${options.bodyHtml}
+      ${processedBodyHtml}
     </div>
   `;
 
   if (options.ctaText && options.ctaUrl) {
     content += `
-      <div style="text-align:center;margin:28px 0 16px;">
-        <a href="${options.ctaUrl}" target="_blank" style="display:inline-block;padding:13px 30px;background-color:#10b981;color:#06281e;font-size:14.5px;font-weight:bold;text-decoration:none;border-radius:8px;box-shadow:0 4px 15px rgba(16,185,129,0.35);">
-          ${options.ctaText}
-        </a>
-      </div>
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:28px 0 16px;">
+        <tr>
+          <td align="center" style="padding:0;">
+            <a href="${options.ctaUrl}" target="_blank" class="btn-cta" style="display:inline-block;padding:13px 32px;background-color:#10b981;color:#06281e;font-size:14.5px;font-weight:700;text-decoration:none;border-radius:8px;box-shadow:0 4px 15px rgba(16,185,129,0.35);">
+              ${options.ctaText}
+            </a>
+          </td>
+        </tr>
+      </table>
     `;
   }
 
-  const html = wrapBrandedEmail(options.subject, content);
+  const html = wrapBrandedEmail(options.subject, content, options.recipientEmail);
 
   return sendEmail({
     to: options.recipientEmail,
     subject: options.subject,
     html,
+    attachments: attachments.length > 0 ? attachments : undefined,
   });
 }
 
