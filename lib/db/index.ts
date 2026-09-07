@@ -365,6 +365,16 @@ async function getPgClient() {
           created_at TIMESTAMPTZ DEFAULT NOW()
         );
       `;
+      await sql`
+        CREATE TABLE IF NOT EXISTS uploads (
+          id TEXT PRIMARY KEY,
+          filename TEXT NOT NULL,
+          mime_type TEXT NOT NULL,
+          size_bytes INTEGER NOT NULL,
+          data_base64 TEXT NOT NULL,
+          created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+      `;
 
       // Seed projects if empty
       const existingProjects = await sql`SELECT COUNT(*) as count FROM projects`;
@@ -1000,4 +1010,75 @@ export async function getSystemKPIs() {
     totalCarbonOffset,
     unreadMessagesCount,
   };
+}
+
+// -----------------------------
+// MEDIA & UPLOAD STORAGE
+// -----------------------------
+export async function saveUpload(file: {
+  id?: string;
+  filename: string;
+  mimeType: string;
+  buffer: Buffer;
+}): Promise<{ id: string; url: string; size: string }> {
+  const id = file.id || `upl_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  const sizeInMB = (file.buffer.length / (1024 * 1024)).toFixed(1);
+  const sizeStr = `${sizeInMB} MB`;
+  const base64 = file.buffer.toString('base64');
+
+  const sql = await getPgClient();
+  if (sql) {
+    try {
+      await sql`
+        INSERT INTO uploads (id, filename, mime_type, size_bytes, data_base64, created_at)
+        VALUES (${id}, ${file.filename}, ${file.mimeType}, ${file.buffer.length}, ${base64}, NOW())
+        ON CONFLICT (id) DO UPDATE SET
+          filename = EXCLUDED.filename,
+          mime_type = EXCLUDED.mime_type,
+          size_bytes = EXCLUDED.size_bytes,
+          data_base64 = EXCLUDED.data_base64;
+      `;
+      return {
+        id,
+        url: `/api/media/${id}/${encodeURIComponent(file.filename)}`,
+        size: sizeStr,
+      };
+    } catch (e) {
+      console.error('Failed to save upload to Neon database:', e);
+    }
+  }
+
+  // Fallback to Data URL if database connection is unavailable
+  const dataUrl = `data:${file.mimeType};base64,${base64}`;
+  return {
+    id,
+    url: dataUrl,
+    size: sizeStr,
+  };
+}
+
+export async function getUpload(id: string): Promise<{
+  filename: string;
+  mimeType: string;
+  buffer: Buffer;
+} | null> {
+  const sql = await getPgClient();
+  if (!sql) return null;
+  try {
+    const rows = await sql`
+      SELECT filename, mime_type, data_base64
+      FROM uploads
+      WHERE id = ${id}
+      LIMIT 1
+    `;
+    if (!rows || rows.length === 0) return null;
+    return {
+      filename: rows[0].filename,
+      mimeType: rows[0].mime_type,
+      buffer: Buffer.from(rows[0].data_base64, 'base64'),
+    };
+  } catch (e) {
+    console.error('Failed to get upload from Neon database:', e);
+    return null;
+  }
 }

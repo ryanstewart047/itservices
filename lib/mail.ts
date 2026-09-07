@@ -444,9 +444,16 @@ export async function sendNewsletterBroadcast(options: {
   `;
 
   if (options.imageUrl) {
+    const absoluteImgUrl =
+      options.imageUrl.startsWith('http://') ||
+      options.imageUrl.startsWith('https://') ||
+      options.imageUrl.startsWith('data:')
+        ? options.imageUrl
+        : `https://earpi.org${options.imageUrl.startsWith('/') ? '' : '/'}${options.imageUrl}`;
+
     content += `
       <div style="margin:0 0 20px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.15);">
-        <img src="${options.imageUrl}" alt="${options.title}" style="width:100%;max-width:100%;height:auto;display:block;" />
+        <img src="${absoluteImgUrl}" alt="${options.title}" style="width:100%;max-width:100%;height:auto;display:block;" />
       </div>
     `;
   }
