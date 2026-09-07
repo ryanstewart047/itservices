@@ -69,7 +69,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/assets/css/flaticon.css" />
@@ -86,7 +86,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;600;700&family=Spline+Sans:wght@300;400;500;600;700&display=swap"
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <ServiceWorkerRegister />
         <SiteShell>{children}</SiteShell>
       </body>

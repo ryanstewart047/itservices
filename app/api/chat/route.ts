@@ -16,7 +16,7 @@ Core Information:
 - Address: 32 Wallace Johnson St, Freetown, Sierra Leone.
 - Contact Details: Phone: +1 (202) 438-6441 or +232 78 046996. Email: official@earpi.org / earthregenerativeprojectsl@gmail.com.
 - Website: https://earpi.org
-- Leadership: Ryan Josiah Stewart (Executive Director / Founder), supported by dedicated community directors: Habibu, Abu, Alimamy, Hassan, Isatu, John, Samuella, Usman.
+- Leadership: Alimamy Sesay (Executive Director / Founder). Website Developer & Technical Lead: Ryan Stewart. Supported by dedicated community directors and leads: Habibu, Abu, Hassan, Isatu, John, Samuella, Usman.
 - Five Priority Areas:
   1. Priority 1: Ecosystem Restoration & Tree Planting (Reforestation, Mangrove conservation)
   2. Priority 2: Renewable Energy & Clean Tech (Clean cookstoves, solar power access)

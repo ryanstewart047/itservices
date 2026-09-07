@@ -283,7 +283,7 @@ const INITIAL_MESSAGES: ContactMessage[] = [
     email: 'claire@earthshot-scouts.eu',
     subject: 'Youth Ambassador Collaboration for 2026 Summit',
     message:
-      'We love your grassroots youth school clubs! Would love to feature Ryan Stewart and EARPI student leads at our upcoming Youth Eco-Action forum.',
+      'We love your grassroots youth school clubs! Would love to feature Alimamy Sesay and EARPI student leads at our upcoming Youth Eco-Action forum.',
     isRead: true,
     createdAt: '2026-08-29T10:15:00.000Z',
   },

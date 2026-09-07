@@ -3,8 +3,8 @@
 import Image from 'next/image';
 
 const teamMembers = [
-  { name: 'Ryan J. Stewart',     role: 'Executive Director',       image: '/assets/img/team/team-1.jpg',  badge: 'Leadership',     bio: 'Visionary leader driving EARPI\'s strategic direction and international partnerships for climate resilience.' },
-  { name: 'Alimamy Sesay',       role: 'Director',                 image: '/assets/img/team/team-4.jpg',  badge: 'Board',          bio: 'Experienced director overseeing governance and program alignment with EARPI\'s climate mission.' },
+  { name: 'Alimamy Sesay',       role: 'Executive Director',                 image: '/assets/img/team/team-4.jpg',  badge: 'Leadership',     bio: 'Founder and Executive Director driving EARPI\'s visionary leadership, international partnerships, and grassroots climate programs across Sierra Leone.' },
+  { name: 'Ryan J. Stewart',     role: 'Website Developer & Technical Lead', image: '/assets/img/team/team-1.jpg',  badge: 'Technology',     bio: 'Website developer and digital architect responsible for EARPI\'s website platform, digital infrastructure, and online systems.' },
   { name: 'Habibu R. Bundu',     role: 'Director of Operations',   image: '/assets/img/team/team-5.jpg',  badge: 'Operations',     bio: 'Manages day-to-day operations ensuring seamless execution of field projects and organisational efficiency.' },
   { name: 'Hassan Kamara',       role: 'Finance & Administration', image: '/assets/img/team/team-2.jpg',  badge: 'Finance',        bio: 'Oversees financial planning, reporting, and administrative systems that keep EARPI accountable.' },
   { name: 'Usman Felix Cole',    role: 'Program Manager',          image: '/assets/img/team/team-3.jpg',  badge: 'Programs',       bio: 'Coordinates multi-country programs and monitors impact metrics across all active field sites.' },
@@ -17,6 +17,7 @@ const teamMembers = [
 
 const badgeColors: Record<string, { bg: string; text: string }> = {
   Leadership:     { bg: 'rgba(250,204,21,0.15)',  text: '#fbbf24' },
+  Technology:     { bg: 'rgba(56,189,248,0.15)',   text: '#38bdf8' },
   Board:          { bg: 'rgba(139,92,246,0.15)',   text: '#a78bfa' },
   Operations:     { bg: 'rgba(59,130,246,0.15)',   text: '#60a5fa' },
   Finance:        { bg: 'rgba(52,199,89,0.15)',    text: '#4ade80' },

@@ -720,7 +720,7 @@ export default async function HomePage() {
               “True ecological regeneration only succeeds when local communities are its primary
               architects, guardians, and economic beneficiaries.”
               <footer style={{ fontStyle: 'normal', fontWeight: 'bold', color: '#10b981', marginTop: '6px', fontSize: '13px' }}>
-                — Ryan Stewart, Executive Director of EARPI
+                — Alimamy Sesay, Executive Director of EARPI
               </footer>
             </blockquote>
 
