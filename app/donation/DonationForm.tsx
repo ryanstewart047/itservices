@@ -143,12 +143,13 @@ function SuccessCard({
         <Link
           href="/"
           style={{
-            padding: '12px 24px',
+            padding: '12px 28px',
             borderRadius: 10,
-            background: 'linear-gradient(135deg,#10b981,#059669)',
-            color: '#fff',
-            fontSize: '14px',
+            background: 'rgba(16,185,129,0.12)',
+            border: '1px solid rgba(16,185,129,0.3)',
+            color: '#34d399',
             fontWeight: 700,
+            fontSize: '14px',
             textDecoration: 'none',
           }}
         >
@@ -158,6 +159,224 @@ function SuccessCard({
     </div>
   );
 }
+
+// ---------------------------------------------------------------------------
+// "Donations Coming Soon" interstitial modal
+// ---------------------------------------------------------------------------
+function DonationComingSoonModal({ onClose }: { onClose: () => void }) {
+  // Close on Escape key
+  if (typeof window !== 'undefined') {
+    // We use an effect in the parent; this is just for the backdrop click
+  }
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(3,14,10,0.85)',
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
+          zIndex: 9998,
+          animation: 'fadeInBackdrop 0.25s ease',
+        }}
+      />
+
+      {/* Modal card */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Donation portal coming soon"
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%,-50%)',
+          zIndex: 9999,
+          width: '90%',
+          maxWidth: 480,
+          borderRadius: 20,
+          background: 'linear-gradient(145deg,#061a14 0%,#0c2e22 60%,#0a2419 100%)',
+          border: '1px solid rgba(16,185,129,0.28)',
+          boxShadow: '0 24px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(52,211,153,0.08)',
+          overflow: 'hidden',
+          animation: 'slideUpModal 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+        }}
+      >
+        {/* Green accent top bar */}
+        <div
+          style={{
+            height: 4,
+            background: 'linear-gradient(90deg,#10b981,#059669,#34d399)',
+          }}
+        />
+
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          style={{
+            position: 'absolute',
+            top: 16,
+            right: 16,
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            borderRadius: '50%',
+            width: 32,
+            height: 32,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            color: '#8aa69b',
+            fontSize: 18,
+            lineHeight: 1,
+          }}
+        >
+          ×
+        </button>
+
+        {/* Body */}
+        <div style={{ padding: '36px 32px 32px' }}>
+          {/* Icon */}
+          <div
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: '50%',
+              background: 'rgba(16,185,129,0.12)',
+              border: '1px solid rgba(16,185,129,0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 20px',
+              fontSize: 28,
+            }}
+          >
+            🌱
+          </div>
+
+          {/* Headline */}
+          <h2
+            style={{
+              margin: '0 0 12px',
+              color: '#ffffff',
+              fontSize: '22px',
+              fontWeight: 800,
+              textAlign: 'center',
+              lineHeight: 1.3,
+            }}
+          >
+            Thank You for Your Generosity!
+          </h2>
+
+          {/* Subtext */}
+          <p
+            style={{
+              margin: '0 0 20px',
+              color: '#a7c9bc',
+              fontSize: '14.5px',
+              lineHeight: 1.75,
+              textAlign: 'center',
+            }}
+          >
+            We are deeply grateful for your willingness to support EARPI&apos;s ecological
+            restoration work. Our online donation portal is currently being set up and will
+            be available very soon.
+          </p>
+
+          {/* Highlighted notice */}
+          <div
+            style={{
+              padding: '14px 18px',
+              borderRadius: 12,
+              background: 'rgba(16,185,129,0.07)',
+              border: '1px solid rgba(16,185,129,0.2)',
+              marginBottom: 24,
+              textAlign: 'center',
+            }}
+          >
+            <p style={{ margin: 0, color: '#34d399', fontWeight: 700, fontSize: '13px' }}>
+              🕐 &nbsp;Please check back soon
+            </p>
+            <p style={{ margin: '6px 0 0', color: '#8aa69b', fontSize: '12.5px', lineHeight: 1.6 }}>
+              In the meantime, you are welcome to reach out to us directly — every
+              contribution, no matter the size, plants seeds for a regenerative future.
+            </p>
+          </div>
+
+          {/* Contact email button */}
+          <a
+            href="mailto:official@earpi.org?subject=Donation%20Inquiry"
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: '14px 20px',
+              borderRadius: 12,
+              background: 'linear-gradient(135deg,#10b981,#059669)',
+              color: '#fff',
+              fontSize: '15px',
+              fontWeight: 700,
+              textDecoration: 'none',
+              textAlign: 'center',
+              boxSizing: 'border-box',
+              boxShadow: '0 4px 16px rgba(16,185,129,0.35)',
+              marginBottom: 12,
+            }}
+          >
+            ✉️ &nbsp;Contact Us to Donate
+          </a>
+
+          {/* Dismiss */}
+          <button
+            onClick={onClose}
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: '12px',
+              borderRadius: 10,
+              background: 'transparent',
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: '#8aa69b',
+              fontSize: '13.5px',
+              cursor: 'pointer',
+              textAlign: 'center',
+            }}
+          >
+            Got it, I'll check back later
+          </button>
+        </div>
+
+        {/* Footer blurb */}
+        <div
+          style={{
+            borderTop: '1px solid rgba(255,255,255,0.06)',
+            padding: '12px 24px',
+            textAlign: 'center',
+            color: '#557467',
+            fontSize: '11px',
+            lineHeight: 1.5,
+          }}
+        >
+          USA Non-profit Corporation Registration MA 001751059 • EIN: 99-0979318
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes fadeInBackdrop { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUpModal {
+          from { opacity: 0; transform: translate(-50%, calc(-50% + 20px)); }
+          to   { opacity: 1; transform: translate(-50%, -50%); }
+        }
+      `}</style>
+    </>
+  );
+}
+
+
 
 // ---------------------------------------------------------------------------
 // Inner checkout form (rendered inside <Elements> so hooks are available)
@@ -346,48 +565,15 @@ export default function DonationForm() {
     project: string;
   } | null>(null);
 
+  // "Coming Soon" interstitial — shown whenever a user tries to donate
+  const [showComingSoon, setShowComingSoon] = useState(false);
+
   const finalAmount = customAmount ? Number(customAmount) : Number(amount);
 
-  // Validate details and create PaymentIntent
+  // Intercept donation attempts — show "Coming Soon" modal instead of proceeding
   const handleDetailsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setDetailsError(null);
-
-    const cleanEmail = donorEmail.trim().toLowerCase();
-    if (!donorName.trim()) return setDetailsError('Please enter your full name.');
-    if (!cleanEmail || !cleanEmail.includes('@') || !cleanEmail.includes('.'))
-      return setDetailsError('Please enter a valid email address.');
-    if (!finalAmount || isNaN(finalAmount) || finalAmount <= 0)
-      return setDetailsError('Please choose or enter a valid donation amount.');
-    if (finalAmount < 1) return setDetailsError('Minimum donation amount is $1.');
-
-    setLoadingIntent(true);
-    try {
-      const res = await fetch('/api/stripe/create-payment-intent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          amount: finalAmount,
-          currency: 'usd',
-          donorName: donorName.trim(),
-          donorEmail: cleanEmail,
-          notes: notes.trim(),
-          frequency,
-          project,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.clientSecret) {
-        setDetailsError(data.error || 'Could not initialise payment. Please try again.');
-        return;
-      }
-      setClientSecret(data.clientSecret);
-      setStep('payment');
-    } catch {
-      setDetailsError('Network error. Please check your connection and try again.');
-    } finally {
-      setLoadingIntent(false);
-    }
+    setShowComingSoon(true);
   };
 
   const handleReset = () => {
@@ -400,6 +586,7 @@ export default function DonationForm() {
     setCustomAmount('');
     setAmount(100);
   };
+
 
   // ---------------------------------------------------------------------------
   // Success screen
@@ -417,36 +604,8 @@ export default function DonationForm() {
   }
 
   // ---------------------------------------------------------------------------
-  // No Stripe key configured — show informational message
+  // No Stripe key configured — still show the donation form but popup will intercept
   // ---------------------------------------------------------------------------
-  if (!stripePromise) {
-    return (
-      <div
-        style={{
-          maxWidth: 600,
-          margin: '0 auto',
-          padding: '40px 32px',
-          borderRadius: 18,
-          background: 'linear-gradient(135deg,#0d2b22,#0f3826)',
-          border: '1px solid rgba(251,191,36,0.3)',
-          textAlign: 'center',
-        }}
-      >
-        <AlertCircle size={40} color="#fbbf24" style={{ marginBottom: 16 }} />
-        <h3 style={{ color: '#fbbf24', margin: '0 0 12px' }}>Payment System Setup Required</h3>
-        <p style={{ color: '#a7b8b2', fontSize: '14px', lineHeight: 1.6 }}>
-          The Stripe publishable key (<code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code>) has not been
-          configured. Please add it to your Vercel environment variables to enable online donations.
-        </p>
-        <p style={{ color: '#6b9e8a', fontSize: '13px', marginTop: 16 }}>
-          To donate now, please contact us at{' '}
-          <a href="mailto:official@earpi.org" style={{ color: '#34d399' }}>
-            official@earpi.org
-          </a>
-        </p>
-      </div>
-    );
-  }
 
   const cardStyle: React.CSSProperties = {
     maxWidth: 680,
@@ -462,7 +621,12 @@ export default function DonationForm() {
   // ---------------------------------------------------------------------------
   if (step === 'details') {
     return (
-      <div style={cardStyle}>
+      <>
+        {/* "Coming Soon" modal overlay — triggered by any donate attempt */}
+        {showComingSoon && (
+          <DonationComingSoonModal onClose={() => setShowComingSoon(false)} />
+        )}
+        <div style={cardStyle}>
         {/* Card header */}
         <div
           style={{
@@ -673,9 +837,11 @@ export default function DonationForm() {
             <span>USA Non-profit Corporation MA 001751059 • EIN: 99-0979318 • Tax Deductible</span>
           </div>
         </form>
-      </div>
+        </div>
+      </>
     );
   }
+
 
   // ---------------------------------------------------------------------------
   // Step 2 — Stripe payment form
