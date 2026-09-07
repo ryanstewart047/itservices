@@ -123,9 +123,6 @@ export default function AdminLoginPage() {
                 }}
               />
             </div>
-            <p style={{ fontSize: '11px', color: '#6b8a7d', margin: '6px 0 0' }}>
-              Default: <code>earpi2026!Admin</code> (configurable in .env)
-            </p>
           </div>
 
           {error && (

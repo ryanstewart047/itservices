@@ -14,6 +14,7 @@ import {
   Leaf,
   Send,
   Activity,
+  Settings,
 } from 'lucide-react';
 
 export default function AdminSidebar() {
@@ -39,6 +40,7 @@ export default function AdminSidebar() {
     { name: 'Send Newsletter', href: '/admin/newsletter', icon: Send, exact: true },
     { name: 'Donations & Ledger', href: '/admin/donations', icon: HeartHandshake, exact: true },
     { name: 'Inquiries & Inbox', href: '/admin/messages', icon: Mail, exact: true },
+    { name: 'Settings & Security', href: '/admin/settings', icon: Settings, exact: true },
   ];
 
   return (
