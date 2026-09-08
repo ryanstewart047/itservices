@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import SiteShell from '@/components/layout/SiteShell';
 import ServiceWorkerRegister from '@/components/pwa/ServiceWorkerRegister';
 import './globals.css';
@@ -90,6 +91,10 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <ServiceWorkerRegister />
         <SiteShell>{children}</SiteShell>
+        <Script
+          src="https://itservicesfreetown.com/js/its-ads.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

@@ -10,6 +10,7 @@ import AIChatBot from '@/components/ai/AIChatBot';
 import PWAInstallPrompt from '@/components/pwa/PWAInstallPrompt';
 import GlobalFormHandler from '@/components/forms/GlobalFormHandler';
 import MobileFlashLoader from '@/components/layout/MobileFlashLoader';
+import ItsAdBanner from '@/components/ads/ItsAdBanner';
 
 export default function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -26,6 +27,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       <div className="page-wrapper">
         <Header />
         <main className="content-wrapper">{children}</main>
+        <ItsAdBanner />
         <Footer />
       </div>
       <BackToTop />
