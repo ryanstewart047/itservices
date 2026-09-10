@@ -75,6 +75,7 @@ export default function RootLayout({
       <head>
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/assets/css/flaticon.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" />
         <link rel="stylesheet" href="/assets/css/remixicon.css" />
         <link rel="stylesheet" href="/assets/css/style.css" />
         <link rel="stylesheet" href="/assets/css/responsive.css" />

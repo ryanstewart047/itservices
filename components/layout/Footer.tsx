@@ -4,6 +4,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ShieldCheck, AlertCircle, Loader2, ArrowRight, Lock } from 'lucide-react';
 import SubscriptionSuccessModal from './SubscriptionSuccessModal';
+import {
+  FacebookIcon,
+  XTwitterIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  YouTubeIcon,
+} from '@/components/icons/SocialIcons';
 
 const BG = '#061a14';
 const BORDER = 'rgba(255,255,255,0.07)';
@@ -36,9 +43,11 @@ const navCols = [
 ];
 
 const socials = [
-  { label: 'Facebook', href: 'https://facebook.com/itservicefreetown', icon: 'ri-facebook-fill' },
-  { label: 'Twitter', href: 'https://twitter.com/earpsierraleone', icon: 'ri-twitter-fill' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/ryan-josiah-stewart-19808a152/', icon: 'ri-linkedin-fill' },
+  { label: 'Facebook', href: 'https://www.facebook.com/earpi.org', Icon: FacebookIcon },
+  { label: 'X (Twitter)', href: 'https://x.com/earpiorg', Icon: XTwitterIcon },
+  { label: 'Instagram', href: 'https://www.instagram.com/earpi.org/', Icon: InstagramIcon },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/earpi-org', Icon: LinkedInIcon },
+  { label: 'YouTube', href: 'https://www.youtube.com/@earpiorg', Icon: YouTubeIcon },
 ];
 
 export default function Footer() {
@@ -137,16 +146,47 @@ export default function Footer() {
             </div>
 
             {/* Socials */}
-            <div style={{ display: 'flex', gap: 8 }}>
-              {socials.map((s) => (
-                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" title={s.label}
-                  style={{ width: 34, height: 34, borderRadius: 8, border: `1px solid ${BORDER}`, background: 'rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: MUTED, textDecoration: 'none', fontSize: 14, transition: 'border-color 0.15s, color 0.15s' }}
-                  onMouseEnter={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.borderColor = 'rgba(16,185,129,0.5)'; el.style.color = ACCENT; }}
-                  onMouseLeave={e => { const el = e.currentTarget as HTMLAnchorElement; el.style.borderColor = BORDER; el.style.color = MUTED; }}
-                >
-                  <i className={s.icon} />
-                </a>
-              ))}
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {socials.map((s) => {
+                const Icon = s.Icon;
+                return (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={s.label}
+                    aria-label={s.label}
+                    style={{
+                      width: 34,
+                      height: 34,
+                      borderRadius: 8,
+                      border: `1px solid ${BORDER}`,
+                      background: 'rgba(255,255,255,0.04)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: MUTED,
+                      textDecoration: 'none',
+                      transition: 'border-color 0.15s, color 0.15s, background-color 0.15s',
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLAnchorElement;
+                      el.style.borderColor = 'rgba(16,185,129,0.5)';
+                      el.style.color = ACCENT;
+                      el.style.backgroundColor = 'rgba(16,185,129,0.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLAnchorElement;
+                      el.style.borderColor = BORDER;
+                      el.style.color = MUTED;
+                      el.style.backgroundColor = 'rgba(255,255,255,0.04)';
+                    }}
+                  >
+                    <Icon size={15} />
+                  </a>
+                );
+              })}
             </div>
           </div>
 

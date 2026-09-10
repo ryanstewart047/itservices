@@ -3,6 +3,13 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import {
+  FacebookIcon,
+  XTwitterIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  YouTubeIcon,
+} from '@/components/icons/SocialIcons';
 
 export default function Header() {
   const [isSticky, setIsSticky] = useState(false);
@@ -104,23 +111,27 @@ export default function Header() {
               <div className="header-top-right top-bar-social-wrap">
                 <div className="social-profile-clean">
                   {[
-                    { href: 'https://www.facebook.com/earpi.org', icon: 'ri-facebook-fill', label: 'Facebook' },
-                    { href: 'https://x.com/earpiorg', icon: 'ri-twitter-x-line', label: 'X (Twitter)' },
-                    { href: 'https://www.instagram.com/earpi.org/', icon: 'ri-instagram-line', label: 'Instagram' },
-                    { href: 'https://www.linkedin.com/company/earpi-org', icon: 'ri-linkedin-fill', label: 'LinkedIn' },
-                    { href: 'https://www.youtube.com/@earpiorg', icon: 'ri-youtube-fill', label: 'YouTube' },
-                  ].map((s) => (
-                    <a
-                      key={s.label}
-                      href={s.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={s.label}
-                      className="top-social-link"
-                    >
-                      <i className={s.icon}></i>
-                    </a>
-                  ))}
+                    { href: 'https://www.facebook.com/earpi.org', Icon: FacebookIcon, label: 'Facebook' },
+                    { href: 'https://x.com/earpiorg', Icon: XTwitterIcon, label: 'X (Twitter)' },
+                    { href: 'https://www.instagram.com/earpi.org/', Icon: InstagramIcon, label: 'Instagram' },
+                    { href: 'https://www.linkedin.com/company/earpi-org', Icon: LinkedInIcon, label: 'LinkedIn' },
+                    { href: 'https://www.youtube.com/@earpiorg', Icon: YouTubeIcon, label: 'YouTube' },
+                  ].map((s) => {
+                    const Icon = s.Icon;
+                    return (
+                      <a
+                        key={s.label}
+                        href={s.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={s.label}
+                        title={s.label}
+                        className="top-social-link"
+                      >
+                        <Icon size={14} />
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -357,6 +368,38 @@ export default function Header() {
                   <Link href="/donation" className="btn style1" style={{ display: 'block', textAlign: 'center' }}>
                     Donate Now <i className="ri-heart-line"></i>
                   </Link>
+                </li>
+
+                {/* Social media links inside mobile menu drawer */}
+                <li className="nav-item d-lg-none" style={{ marginTop: '20px', paddingTop: '18px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                  <p style={{ textAlign: 'center', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#10b981', margin: '0 0 10px', fontWeight: 700 }}>
+                    Follow EARPI
+                  </p>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                    {[
+                      { href: 'https://www.facebook.com/earpi.org', Icon: FacebookIcon, label: 'Facebook' },
+                      { href: 'https://x.com/earpiorg', Icon: XTwitterIcon, label: 'X (Twitter)' },
+                      { href: 'https://www.instagram.com/earpi.org/', Icon: InstagramIcon, label: 'Instagram' },
+                      { href: 'https://www.linkedin.com/company/earpi-org', Icon: LinkedInIcon, label: 'LinkedIn' },
+                      { href: 'https://www.youtube.com/@earpiorg', Icon: YouTubeIcon, label: 'YouTube' },
+                    ].map((s) => {
+                      const Icon = s.Icon;
+                      return (
+                        <a
+                          key={s.label}
+                          href={s.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={s.label}
+                          title={s.label}
+                          className="top-social-link"
+                          style={{ width: '38px', height: '38px' }}
+                        >
+                          <Icon size={16} />
+                        </a>
+                      );
+                    })}
+                  </div>
                 </li>
               </ul>
 

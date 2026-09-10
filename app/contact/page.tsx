@@ -1,6 +1,14 @@
 import type { Metadata } from 'next';
 import ContactForm from '@/components/forms/ContactForm';
 import Link from 'next/link';
+import {
+  FacebookIcon,
+  XTwitterIcon,
+  LinkedInIcon,
+  TikTokIcon,
+  InstagramIcon,
+  YouTubeIcon,
+} from '@/components/icons/SocialIcons';
 
 export const metadata: Metadata = {
   title: 'Contact Us | EARPI',
@@ -70,25 +78,35 @@ export default function ContactPage() {
                 </div>
                 <div className="contact-item">
                   <h3>Follow Us</h3>
-                  <ul className="social-profile style2 list-style">
+                  <ul className="social-profile style2 list-style" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', padding: 0, listStyle: 'none' }}>
                     <li>
-                      <a href="https://facebook.com/itservicefreetown" target="_blank" rel="noopener noreferrer">
-                        <i className="ri-facebook-fill"></i>
+                      <a href="https://www.facebook.com/earpi.org" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <FacebookIcon size={16} />
                       </a>
                     </li>
                     <li>
-                      <a href="https://twitter.com/earpsierraleone" target="_blank" rel="noopener noreferrer">
-                        <i className="ri-twitter-fill"></i>
+                      <a href="https://x.com/earpiorg" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <XTwitterIcon size={15} />
                       </a>
                     </li>
                     <li>
-                      <a href="https://www.linkedin.com/in/ryan-josiah-stewart-19808a152/" target="_blank" rel="noopener noreferrer">
-                        <i className="ri-linkedin-fill"></i>
+                      <a href="https://www.instagram.com/earpi.org/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <InstagramIcon size={16} />
                       </a>
                     </li>
                     <li>
-                      <a href="https://www.tiktok.com/@itservicesfreetown" target="_blank" rel="noopener noreferrer">
-                        <i className="fab fa-tiktok"></i>
+                      <a href="https://www.linkedin.com/company/earpi-org" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <LinkedInIcon size={16} />
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://www.youtube.com/@earpiorg" target="_blank" rel="noopener noreferrer" aria-label="YouTube" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <YouTubeIcon size={16} />
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://www.tiktok.com/@itservicesfreetown" target="_blank" rel="noopener noreferrer" aria-label="TikTok" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <TikTokIcon size={16} />
                       </a>
                     </li>
                   </ul>

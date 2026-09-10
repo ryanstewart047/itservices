@@ -11,7 +11,6 @@ const SLIDES = [
     tagColor: '#10b981',
     headline: 'Every Sapling Planted',
     headlineGradient: 'Is a Promise to the Future.',
-    body: 'Community members in Yawri Bay and Sherbro Island are planting thousands of mangrove saplings, rebuilding coastal buffers that protect villages from rising sea levels and storm surges.',
     cta: { label: 'See Our Field Projects', href: '/projects' },
   },
   {
@@ -20,8 +19,6 @@ const SLIDES = [
     tagColor: '#f59e0b',
     headline: 'Change Starts',
     headlineGradient: 'With the Community.',
-    body:
-      "Our grassroots mobilisation model puts local voices at the centre of every climate decision. From village councils to women's cooperatives, we build lasting environmental stewardship from within.",
     cta: { label: 'Meet Our Team', href: '/team' },
   },
   {
@@ -30,8 +27,6 @@ const SLIDES = [
     tagColor: '#38bdf8',
     headline: 'Restoring Forests',
     headlineGradient: 'That Breathe for All of Us.',
-    body:
-      "Sierra Leone's mangrove estuaries store up to 10× more carbon than terrestrial forests. Our drone-monitored restoration zones in Sherbro Island are sequestering carbon while reviving fisheries.",
     cta: { label: 'Explore the Ecosystem', href: '/priority-one' },
   },
   {
@@ -40,7 +35,6 @@ const SLIDES = [
     tagColor: '#a78bfa',
     headline: 'The Next Generation',
     headlineGradient: 'Is Already Leading.',
-    body: 'Young climate advocates across 20 Sierra Leonean schools are driving green clubs, school nurseries, and public awareness campaigns — turning eco-literacy into lifelong environmental leadership.',
     cta: { label: 'Support Youth Programs', href: '/priority-four' },
   },
 ];
@@ -196,7 +190,7 @@ export default function HeroSlider() {
             fontSize: 'clamp(28px, 5.2vw, 56px)',
             fontWeight: 900,
             color: '#ffffff',
-            margin: '0 0 16px',
+            margin: '0 0 32px',
             lineHeight: 1.14,
             letterSpacing: '-0.5px',
             textShadow: '0 3px 16px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0,0,0,0.9)',
@@ -215,20 +209,6 @@ export default function HeroSlider() {
             {slide.headlineGradient}
           </span>
         </h1>
-
-        {/* Body text */}
-        <p
-          style={{
-            fontSize: 'clamp(14px, 1.8vw, 18px)',
-            color: '#f0fdf4',
-            lineHeight: 1.65,
-            maxWidth: '740px',
-            margin: '0 auto 32px',
-            textShadow: '0 2px 10px rgba(0, 0, 0, 0.85), 0 1px 2px rgba(0,0,0,0.95)',
-          }}
-        >
-          {slide.body}
-        </p>
 
         {/* CTA buttons */}
         <div
