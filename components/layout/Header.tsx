@@ -94,7 +94,7 @@ export default function Header() {
                 <ul className="contact-info list-style">
                   <li>
                     <i className="flaticon-phone-call"></i>
-                    <a href="tel:+12024386441">+1 (202) 438-6441</a>
+                    <a href="tel:+5712376578">+5712376578</a>
                   </li>
                   <li>
                     <i className="flaticon-email-2"></i>

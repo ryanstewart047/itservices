@@ -70,7 +70,7 @@ export default function ContactPage() {
                 <div className="contact-item">
                   <h3>Support Line</h3>
                   <p style={{ margin: '4px 0' }}>
-                    <a href="tel:+12024386441">+1 (202) 438-6441 (USA)</a>
+                    <a href="tel:+5712376578">+5712376578</a>
                   </p>
                   <p style={{ margin: '4px 0' }}>
                     <a href="tel:+23278046996">+232 78 046996 (Sierra Leone)</a>

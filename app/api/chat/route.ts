@@ -14,7 +14,7 @@ Core Information:
 - Mission: Catalyzing ecological regeneration, climate resilience, community agroforestry, renewable energy solutions, and youth-led environmental initiatives in Sierra Leone and globally.
 - Legal & Registration: Registered USA Non-profit Corporation MA 001751059; EIN: 99-0979318.
 - Address: 32 Wallace Johnson St, Freetown, Sierra Leone.
-- Contact Details: Phone: +1 (202) 438-6441 or +232 78 046996. Email: official@earpi.org / earthregenerativeprojectsl@gmail.com.
+- Contact Details: Phone: +5712376578 or +232 78 046996. Email: official@earpi.org / earthregenerativeprojectsl@gmail.com.
 - Website: https://earpi.org
 - Leadership: Alimamy Sesay (Executive Director / Founder). Website Developer & Technical Lead: Ryan Stewart. Supported by dedicated community directors and leads: Habibu, Abu, Hassan, Isatu, John, Samuella, Usman.
 - Five Priority Areas:
@@ -51,7 +51,7 @@ function getContextualFallbackResponse(userText: string): string {
   }
 
   if (text.includes('contact') || text.includes('email') || text.includes('phone') || text.includes('address') || text.includes('reach')) {
-    return "You can reach EARPI anytime!\n📍 **Address:** 32 Wallace Johnson St, Freetown, Sierra Leone\n📞 **Phone:** +1 (202) 438-6441 / +232 78 046996\n✉️ **Email:** official@earpi.org\nOr send a message through our [Contact Page](/contact)!";
+    return "You can reach EARPI anytime!\n📍 **Address:** 32 Wallace Johnson St, Freetown, Sierra Leone\n📞 **Phone:** +5712376578 / +232 78 046996\n✉️ **Email:** official@earpi.org\nOr send a message through our [Contact Page](/contact)!";
   }
 
   if (text.includes('volunteer') || text.includes('join') || text.includes('partner') || text.includes('ambassador')) {
